@@ -1,0 +1,4 @@
+# JSON bruto da API (37 MB) — regerável com scripts/coletar.py; mantém só o manifesto de períodos
+dados/raw/*
+!dados/raw/_manifest_*.json
+scripts/__pycache__/

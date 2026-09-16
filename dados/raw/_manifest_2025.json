@@ -1,0 +1,704 @@
+{
+  "RO": {
+    "RREO-Anexo 01": {
+      "periodo": 6,
+      "n": 568
+    },
+    "RREO-Anexo 02": {
+      "periodo": 6,
+      "n": 1754
+    },
+    "RREO-Anexo 03": {
+      "periodo": 6,
+      "n": 383
+    },
+    "RREO-Anexo 06": {
+      "periodo": 6,
+      "n": 202
+    },
+    "RGF-Anexo 01": {
+      "periodo": 3,
+      "n": 228
+    },
+    "RGF-Anexo 02": {
+      "periodo": 3,
+      "n": 107
+    }
+  },
+  "AC": {
+    "RREO-Anexo 01": {
+      "periodo": 6,
+      "n": 615
+    },
+    "RREO-Anexo 02": {
+      "periodo": 6,
+      "n": 2033
+    },
+    "RREO-Anexo 03": {
+      "periodo": 6,
+      "n": 396
+    },
+    "RREO-Anexo 06": {
+      "periodo": 6,
+      "n": 195
+    },
+    "RGF-Anexo 01": {
+      "periodo": 3,
+      "n": 238
+    },
+    "RGF-Anexo 02": {
+      "periodo": 3,
+      "n": 104
+    }
+  },
+  "AM": {
+    "RREO-Anexo 01": {
+      "periodo": 6,
+      "n": 542
+    },
+    "RREO-Anexo 02": {
+      "periodo": 6,
+      "n": 1963
+    },
+    "RREO-Anexo 03": {
+      "periodo": 6,
+      "n": 414
+    },
+    "RREO-Anexo 06": {
+      "periodo": 6,
+      "n": 199
+    },
+    "RGF-Anexo 01": {
+      "periodo": 3,
+      "n": 233
+    },
+    "RGF-Anexo 02": {
+      "periodo": 3,
+      "n": 102
+    }
+  },
+  "RR": {
+    "RREO-Anexo 01": {
+      "periodo": 6,
+      "n": 473
+    },
+    "RREO-Anexo 02": {
+      "periodo": 6,
+      "n": 1659
+    },
+    "RREO-Anexo 03": {
+      "periodo": 6,
+      "n": 387
+    },
+    "RREO-Anexo 06": {
+      "periodo": 6,
+      "n": 195
+    },
+    "RGF-Anexo 01": {
+      "periodo": 3,
+      "n": 208
+    },
+    "RGF-Anexo 02": {
+      "periodo": 3,
+      "n": 106
+    }
+  },
+  "PA": {
+    "RREO-Anexo 01": {
+      "periodo": 6,
+      "n": 563
+    },
+    "RREO-Anexo 02": {
+      "periodo": 6,
+      "n": 2150
+    },
+    "RREO-Anexo 03": {
+      "periodo": 6,
+      "n": 415
+    },
+    "RREO-Anexo 06": {
+      "periodo": 6,
+      "n": 200
+    },
+    "RGF-Anexo 01": {
+      "periodo": 3,
+      "n": 206
+    },
+    "RGF-Anexo 02": {
+      "periodo": 3,
+      "n": 107
+    }
+  },
+  "AP": {
+    "RREO-Anexo 01": {
+      "periodo": 6,
+      "n": 481
+    },
+    "RREO-Anexo 02": {
+      "periodo": 6,
+      "n": 1511
+    },
+    "RREO-Anexo 03": {
+      "periodo": 6,
+      "n": 375
+    },
+    "RREO-Anexo 06": {
+      "periodo": 6,
+      "n": 195
+    },
+    "RGF-Anexo 01": {
+      "periodo": 3,
+      "n": 161
+    },
+    "RGF-Anexo 02": {
+      "periodo": 3,
+      "n": 103
+    }
+  },
+  "TO": {
+    "RREO-Anexo 01": {
+      "periodo": 6,
+      "n": 520
+    },
+    "RREO-Anexo 02": {
+      "periodo": 6,
+      "n": 1888
+    },
+    "RREO-Anexo 03": {
+      "periodo": 6,
+      "n": 393
+    },
+    "RREO-Anexo 06": {
+      "periodo": 6,
+      "n": 207
+    },
+    "RGF-Anexo 01": {
+      "periodo": 3,
+      "n": 226
+    },
+    "RGF-Anexo 02": {
+      "periodo": 3,
+      "n": 124
+    }
+  },
+  "MA": {
+    "RREO-Anexo 01": {
+      "periodo": 6,
+      "n": 504
+    },
+    "RREO-Anexo 02": {
+      "periodo": 6,
+      "n": 1768
+    },
+    "RREO-Anexo 03": {
+      "periodo": 6,
+      "n": 388
+    },
+    "RREO-Anexo 06": {
+      "periodo": 6,
+      "n": 193
+    },
+    "RGF-Anexo 01": {
+      "periodo": 3,
+      "n": 195
+    },
+    "RGF-Anexo 02": {
+      "periodo": 3,
+      "n": 97
+    }
+  },
+  "PI": {
+    "RREO-Anexo 01": {
+      "periodo": 6,
+      "n": 530
+    },
+    "RREO-Anexo 02": {
+      "periodo": 6,
+      "n": 1809
+    },
+    "RREO-Anexo 03": {
+      "periodo": 6,
+      "n": 391
+    },
+    "RREO-Anexo 06": {
+      "periodo": 6,
+      "n": 207
+    },
+    "RGF-Anexo 01": {
+      "periodo": 3,
+      "n": 203
+    },
+    "RGF-Anexo 02": {
+      "periodo": 3,
+      "n": 115
+    }
+  },
+  "CE": {
+    "RREO-Anexo 01": {
+      "periodo": 6,
+      "n": 624
+    },
+    "RREO-Anexo 02": {
+      "periodo": 6,
+      "n": 2437
+    },
+    "RREO-Anexo 03": {
+      "periodo": 6,
+      "n": 392
+    },
+    "RREO-Anexo 06": {
+      "periodo": 6,
+      "n": 203
+    },
+    "RGF-Anexo 01": {
+      "periodo": 3,
+      "n": 217
+    },
+    "RGF-Anexo 02": {
+      "periodo": 3,
+      "n": 121
+    }
+  },
+  "RN": {
+    "RREO-Anexo 01": {
+      "periodo": 6,
+      "n": 530
+    },
+    "RREO-Anexo 02": {
+      "periodo": 6,
+      "n": 1686
+    },
+    "RREO-Anexo 03": {
+      "periodo": 6,
+      "n": 417
+    },
+    "RREO-Anexo 06": {
+      "periodo": 6,
+      "n": 207
+    },
+    "RGF-Anexo 01": {
+      "periodo": 3,
+      "n": 235
+    },
+    "RGF-Anexo 02": {
+      "periodo": 3,
+      "n": 120
+    }
+  },
+  "PB": {
+    "RREO-Anexo 01": {
+      "periodo": 6,
+      "n": 590
+    },
+    "RREO-Anexo 02": {
+      "periodo": 6,
+      "n": 2036
+    },
+    "RREO-Anexo 03": {
+      "periodo": 6,
+      "n": 390
+    },
+    "RREO-Anexo 06": {
+      "periodo": 6,
+      "n": 205
+    },
+    "RGF-Anexo 01": {
+      "periodo": 3,
+      "n": 194
+    },
+    "RGF-Anexo 02": {
+      "periodo": 3,
+      "n": 112
+    }
+  },
+  "PE": {
+    "RREO-Anexo 01": {
+      "periodo": 6,
+      "n": 640
+    },
+    "RREO-Anexo 02": {
+      "periodo": 6,
+      "n": 1804
+    },
+    "RREO-Anexo 03": {
+      "periodo": 6,
+      "n": 414
+    },
+    "RREO-Anexo 06": {
+      "periodo": 6,
+      "n": 181
+    },
+    "RGF-Anexo 01": {
+      "periodo": 3,
+      "n": 186
+    },
+    "RGF-Anexo 02": {
+      "periodo": 3,
+      "n": 105
+    }
+  },
+  "AL": {
+    "RREO-Anexo 01": {
+      "periodo": 6,
+      "n": 570
+    },
+    "RREO-Anexo 02": {
+      "periodo": 6,
+      "n": 1709
+    },
+    "RREO-Anexo 03": {
+      "periodo": 6,
+      "n": 384
+    },
+    "RREO-Anexo 06": {
+      "periodo": 6,
+      "n": 189
+    },
+    "RGF-Anexo 01": {
+      "periodo": 3,
+      "n": 195
+    },
+    "RGF-Anexo 02": {
+      "periodo": 3,
+      "n": 92
+    }
+  },
+  "SE": {
+    "RREO-Anexo 01": {
+      "periodo": 6,
+      "n": 546
+    },
+    "RREO-Anexo 02": {
+      "periodo": 6,
+      "n": 1878
+    },
+    "RREO-Anexo 03": {
+      "periodo": 6,
+      "n": 394
+    },
+    "RREO-Anexo 06": {
+      "periodo": 6,
+      "n": 198
+    },
+    "RGF-Anexo 01": {
+      "periodo": 3,
+      "n": 205
+    },
+    "RGF-Anexo 02": {
+      "periodo": 3,
+      "n": 104
+    }
+  },
+  "BA": {
+    "RREO-Anexo 01": {
+      "periodo": 6,
+      "n": 588
+    },
+    "RREO-Anexo 02": {
+      "periodo": 6,
+      "n": 2311
+    },
+    "RREO-Anexo 03": {
+      "periodo": 6,
+      "n": 401
+    },
+    "RREO-Anexo 06": {
+      "periodo": 6,
+      "n": 202
+    },
+    "RGF-Anexo 01": {
+      "periodo": 3,
+      "n": 214
+    },
+    "RGF-Anexo 02": {
+      "periodo": 3,
+      "n": 113
+    }
+  },
+  "MG": {
+    "RREO-Anexo 01": {
+      "periodo": 6,
+      "n": 697
+    },
+    "RREO-Anexo 02": {
+      "periodo": 6,
+      "n": 2182
+    },
+    "RREO-Anexo 03": {
+      "periodo": 6,
+      "n": 420
+    },
+    "RREO-Anexo 06": {
+      "periodo": 6,
+      "n": 213
+    },
+    "RGF-Anexo 01": {
+      "periodo": 3,
+      "n": 211
+    },
+    "RGF-Anexo 02": {
+      "periodo": 3,
+      "n": 113
+    }
+  },
+  "ES": {
+    "RREO-Anexo 01": {
+      "periodo": 6,
+      "n": 596
+    },
+    "RREO-Anexo 02": {
+      "periodo": 6,
+      "n": 2115
+    },
+    "RREO-Anexo 03": {
+      "periodo": 6,
+      "n": 420
+    },
+    "RREO-Anexo 06": {
+      "periodo": 6,
+      "n": 208
+    },
+    "RGF-Anexo 01": {
+      "periodo": 3,
+      "n": 206
+    },
+    "RGF-Anexo 02": {
+      "periodo": 3,
+      "n": 111
+    }
+  },
+  "RJ": {
+    "RREO-Anexo 01": {
+      "periodo": 6,
+      "n": 674
+    },
+    "RREO-Anexo 02": {
+      "periodo": 6,
+      "n": 2043
+    },
+    "RREO-Anexo 03": {
+      "periodo": 6,
+      "n": 412
+    },
+    "RREO-Anexo 06": {
+      "periodo": 6,
+      "n": 211
+    },
+    "RGF-Anexo 01": {
+      "periodo": 3,
+      "n": 214
+    },
+    "RGF-Anexo 02": {
+      "periodo": 3,
+      "n": 128
+    }
+  },
+  "SP": {
+    "RREO-Anexo 01": {
+      "periodo": 6,
+      "n": 707
+    },
+    "RREO-Anexo 02": {
+      "periodo": 6,
+      "n": 1999
+    },
+    "RREO-Anexo 03": {
+      "periodo": 6,
+      "n": 423
+    },
+    "RREO-Anexo 06": {
+      "periodo": 6,
+      "n": 222
+    },
+    "RGF-Anexo 01": {
+      "periodo": 3,
+      "n": 202
+    },
+    "RGF-Anexo 02": {
+      "periodo": 3,
+      "n": 125
+    }
+  },
+  "PR": {
+    "RREO-Anexo 01": {
+      "periodo": 6,
+      "n": 690
+    },
+    "RREO-Anexo 02": {
+      "periodo": 6,
+      "n": 1866
+    },
+    "RREO-Anexo 03": {
+      "periodo": 6,
+      "n": 418
+    },
+    "RREO-Anexo 06": {
+      "periodo": 6,
+      "n": 205
+    },
+    "RGF-Anexo 01": {
+      "periodo": 3,
+      "n": 189
+    },
+    "RGF-Anexo 02": {
+      "periodo": 3,
+      "n": 123
+    }
+  },
+  "SC": {
+    "RREO-Anexo 01": {
+      "periodo": 6,
+      "n": 598
+    },
+    "RREO-Anexo 02": {
+      "periodo": 6,
+      "n": 1985
+    },
+    "RREO-Anexo 03": {
+      "periodo": 6,
+      "n": 417
+    },
+    "RREO-Anexo 06": {
+      "periodo": 6,
+      "n": 212
+    },
+    "RGF-Anexo 01": {
+      "periodo": 3,
+      "n": 196
+    },
+    "RGF-Anexo 02": {
+      "periodo": 3,
+      "n": 123
+    }
+  },
+  "RS": {
+    "RREO-Anexo 01": {
+      "periodo": 6,
+      "n": 605
+    },
+    "RREO-Anexo 02": {
+      "periodo": 6,
+      "n": 1759
+    },
+    "RREO-Anexo 03": {
+      "periodo": 6,
+      "n": 410
+    },
+    "RREO-Anexo 06": {
+      "periodo": 6,
+      "n": 207
+    },
+    "RGF-Anexo 01": {
+      "periodo": 3,
+      "n": 214
+    },
+    "RGF-Anexo 02": {
+      "periodo": 3,
+      "n": 112
+    }
+  },
+  "MS": {
+    "RREO-Anexo 01": {
+      "periodo": 6,
+      "n": 570
+    },
+    "RREO-Anexo 02": {
+      "periodo": 6,
+      "n": 1830
+    },
+    "RREO-Anexo 03": {
+      "periodo": 6,
+      "n": 393
+    },
+    "RREO-Anexo 06": {
+      "periodo": 6,
+      "n": 206
+    },
+    "RGF-Anexo 01": {
+      "periodo": 3,
+      "n": 211
+    },
+    "RGF-Anexo 02": {
+      "periodo": 3,
+      "n": 104
+    }
+  },
+  "MT": {
+    "RREO-Anexo 01": {
+      "periodo": 6,
+      "n": 604
+    },
+    "RREO-Anexo 02": {
+      "periodo": 6,
+      "n": 2005
+    },
+    "RREO-Anexo 03": {
+      "periodo": 6,
+      "n": 461
+    },
+    "RREO-Anexo 06": {
+      "periodo": 6,
+      "n": 202
+    },
+    "RGF-Anexo 01": {
+      "periodo": 3,
+      "n": 263
+    },
+    "RGF-Anexo 02": {
+      "periodo": 3,
+      "n": 144
+    }
+  },
+  "GO": {
+    "RREO-Anexo 01": {
+      "periodo": 6,
+      "n": 574
+    },
+    "RREO-Anexo 02": {
+      "periodo": 6,
+      "n": 1875
+    },
+    "RREO-Anexo 03": {
+      "periodo": 6,
+      "n": 398
+    },
+    "RREO-Anexo 06": {
+      "periodo": 6,
+      "n": 221
+    },
+    "RGF-Anexo 01": {
+      "periodo": 3,
+      "n": 205
+    },
+    "RGF-Anexo 02": {
+      "periodo": 3,
+      "n": 120
+    }
+  },
+  "DF": {
+    "RREO-Anexo 01": {
+      "periodo": 6,
+      "n": 638
+    },
+    "RREO-Anexo 02": {
+      "periodo": 6,
+      "n": 2119
+    },
+    "RREO-Anexo 03": {
+      "periodo": 6,
+      "n": 494
+    },
+    "RREO-Anexo 06": {
+      "periodo": 6,
+      "n": 219
+    },
+    "RGF-Anexo 01": {
+      "periodo": 3,
+      "n": 218
+    },
+    "RGF-Anexo 02": {
+      "periodo": 3,
+      "n": 116
+    }
+  }
+}
