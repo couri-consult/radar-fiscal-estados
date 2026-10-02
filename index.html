@@ -164,15 +164,17 @@
   svg .uf-sigla { font-size: 9.5px; font-weight: 700; pointer-events: none; }
 
   /* distribuição: uma linha por indicador */
-  .strip { display: grid; grid-template-columns: 196px 54px 1fr 54px; gap: 8px; align-items: center; padding: 1px 0; cursor: pointer; }
+  .strip { display: grid; grid-template-columns: 182px 48px 1fr 48px; gap: 7px; align-items: center; padding: 3px 0; cursor: pointer; border-bottom: 1px solid var(--line); }
+  .strip:last-child { border-bottom: 0; }
   .strip .lim { font-size: 10px; color: var(--muted); font-variant-numeric: tabular-nums; text-align: right; }
   .strip .lim:last-child { text-align: left; }
   .strip:hover { background: var(--panel); }
   .strip .rot { font-size: 11.5px; color: var(--ink); text-align: right; line-height: 1.2; }
   .strip .rot small { display: block; color: var(--muted); font-size: 10px; }
   .strip svg { display: block; }
-  svg .pt-uf { fill: var(--claro); }
-  svg .pt-uf.sel { fill: var(--escuro); }
+  svg .pt-uf { fill: var(--claro); stroke: var(--bg); stroke-width: 1; cursor: pointer; }
+  svg .pt-uf:hover { fill: var(--accent); }
+  svg .pt-uf.sel { fill: var(--escuro); stroke: var(--bg); stroke-width: 1.2; }
   svg .eixo-strip { stroke: var(--line); stroke-width: 1; }
   svg .med-strip { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 2 2; }
   svg .lim-strip { font-size: 9.5px; fill: var(--muted); }
@@ -670,23 +672,50 @@ const DATA = {"ano": 2025, "gerado": "02/10/2026", "estados": [{"uf": "AC", "nom
     document.getElementById('mapa-nota').textContent = ind.leitura.split('. ')[0] + '.';
   }
 
-  // Distribuição: uma linha por indicador, com os 27 estados como pontos
-  const SW = 100, SH = 24;
+  // Distribuição em colmeia: proporção preservada (círculos de verdade) e pontos que
+  // colidem deslocados na vertical, para que a concentração apareça em vez de virar mancha.
+  const SW = 440, PR = 4.4, SH_MIN = 34, SH_MAX = 76;   // viewBox em unidades reais
+  function colmeia(pts, r) {
+    const passo = 2 * r + 0.8;
+    const postos = [];
+    pts.slice().sort((a, b) => a.x - b.x).forEach(p => {
+      let k = 0, y = 0;
+      while (k < 30) {
+        y = (k % 2 ? -1 : 1) * Math.ceil(k / 2) * passo;
+        if (!postos.some(q => Math.abs(q.x - p.x) < 2 * r && Math.abs(q.y - y) < passo - 0.1)) break;
+        k++;
+      }
+      p.y = y; postos.push(p);
+    });
+    // a linha cresce com a pilha mais alta; acima do teto, comprime (sobreposição parcial,
+    // preferível a cortar pontos fora do viewBox)
+    const alcance = Math.max(...pts.map(p => Math.abs(p.y)), 0);
+    let alt = 2 * (alcance + r) + 6;
+    if (alt > SH_MAX) {
+      const f = (SH_MAX / 2 - r - 3) / alcance;
+      pts.forEach(p => p.y *= f);
+      alt = SH_MAX;
+    }
+    return {pts, alt: Math.max(alt, SH_MIN)};
+  }
   function desenhaStrips() {
     let html = '';
     IND.forEach((ind, i) => {
       const ok = E.filter(e => e[ind.k] != null);
       const vs = ok.map(e => e[ind.k]);
       const lo = Math.min(...vs), hi = Math.max(...vs), span = (hi - lo) || 1;
-      const X = v => 3 + (v - lo) / span * (SW - 6);
+      const X = v => PR + 1 + (v - lo) / span * (SW - 2 * (PR + 1));
       const med = mediana(vs);
-      let s = `<svg viewBox="0 0 ${SW} ${SH}" preserveAspectRatio="none" style="width:100%;height:${SH}px" role="img" aria-label="Distribuição de ${esc(ind.titulo)}">`;
-      s += `<line class="eixo-strip" x1="3" y1="12" x2="${SW - 3}" y2="12" vector-effect="non-scaling-stroke"/>`;
-      s += `<line class="med-strip" x1="${X(med).toFixed(2)}" y1="4" x2="${X(med).toFixed(2)}" y2="20" vector-effect="non-scaling-stroke"/>`;
-      ok.forEach(e => {
-        const sel = e.uf === ufSel;
-        s += `<circle class="pt-uf${sel ? ' sel' : ''}" data-uf="${e.uf}" cx="${X(e[ind.k]).toFixed(2)}" cy="12" r="${sel ? 4 : 2.4}" vector-effect="non-scaling-stroke">` +
-             `<title>${esc(e.nome)}: ${val(ind, e[ind.k])}</title></circle>`;
+      const {pts, alt: SH} = colmeia(ok.map(e => ({uf: e.uf, nome: e.nome, v: e[ind.k], x: X(e[ind.k])})), PR);
+      const cy = SH / 2;
+      let s = `<svg viewBox="0 0 ${SW} ${SH.toFixed(1)}" style="width:100%;height:auto" role="img" aria-label="Distribuição de ${esc(ind.titulo)}">`;
+      s += `<line class="eixo-strip" x1="0" y1="${cy.toFixed(1)}" x2="${SW}" y2="${cy.toFixed(1)}"/>`;
+      s += `<line class="med-strip" x1="${X(med).toFixed(1)}" y1="3" x2="${X(med).toFixed(1)}" y2="${(SH - 3).toFixed(1)}"/>`;
+      // o selecionado é desenhado por último, para ficar por cima da pilha
+      pts.sort((a, b) => (a.uf === ufSel) - (b.uf === ufSel)).forEach(p => {
+        const sel = p.uf === ufSel;
+        s += `<circle class="pt-uf${sel ? ' sel' : ''}" data-uf="${p.uf}" cx="${p.x.toFixed(1)}" cy="${(cy + p.y).toFixed(1)}" r="${sel ? PR + 1.5 : PR}">` +
+             `<title>${esc(p.nome)}: ${val(ind, p.v)}</title></circle>`;
       });
       s += '</svg>';
       const selE = ufSel ? ok.find(e => e.uf === ufSel) : null;
@@ -712,7 +741,7 @@ const DATA = {"ano": 2025, "gerado": "02/10/2026", "estados": [{"uf": "AC", "nom
     document.querySelectorAll('#strips .pt-uf').forEach(c => {
       const on = uf != null && c.dataset.uf === uf;
       c.classList.toggle('sel', on);
-      c.setAttribute('r', on ? 4 : 2.4);
+      c.setAttribute('r', on ? 5.9 : 4.4);
     });
   }
   function selecionar(uf) {
