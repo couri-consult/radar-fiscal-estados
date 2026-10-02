@@ -49,7 +49,9 @@ gasto por função, não cumprimento de piso.
 
 ## Identidade visual
 
-Painel e figuras seguem a identidade do **Cobertor Curto**: terracota `#A24F3D` sobre branco,
+Painel e figuras levam a logomarca do **Cobertor Curto** (`assets/`, fundo transparente; no
+`index.html` ela vai embutida como data URI, para a página seguir autocontida) e seguem a
+identidade: terracota `#A24F3D` sobre branco,
 texto grafite `#202326`, escala de uma cor só. A severidade é dada pela **intensidade** do
 terracota — lavado (folga), base (normal), escurecido `#643126` (acima do limite legal) —, sem
 paleta divergente. Tipografia Aptos quando disponível no sistema, com fallback para Segoe UI.
@@ -63,6 +65,7 @@ estados/
 │   ├── indicadores_2025.csv   # tabela final (; como separador) com bases em R$ e indicadores em %
 │   ├── indicadores_2025.json
 │   └── raw/                   # JSON bruto da API por UF/anexo (não versionado) + manifesto de períodos
+├── assets/                    # logomarca do Cobertor Curto (PNG transparente + WebP)
 ├── figuras/                   # PNGs na identidade visual do Cobertor Curto (para publicação)
 └── scripts/
     ├── coletar.py             # baixa RREO A01/A02/A03/A06/A09/A13 e RGF A01-A04 dos 27 entes

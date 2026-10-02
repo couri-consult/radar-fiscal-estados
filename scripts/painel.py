@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Gera index.html (painel autocontido) a partir de dados/indicadores_2025.json.
 O HTML embute os dados e desenha os rankings em SVG inline (sem bibliotecas externas)."""
-import json, os, datetime
+import json, os, datetime, base64
 
 ANO = int(os.environ.get("ANO", "2025"))
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -143,5 +143,10 @@ payload = {"ano": ANO, "gerado": hoje, "estados": data, "indicadores": INDICADOR
 
 html = open(os.path.join(HERE, "painel_template.html"), encoding="utf-8").read()
 html = html.replace("/*__DATA__*/null", json.dumps(payload, ensure_ascii=False))
+
+# a logo entra como data URI para o index.html continuar autocontido (não depende de assets/ em runtime)
+logo = os.path.join(ROOT, "assets", "logo-cobertor-curto.webp")
+with open(logo, "rb") as f:
+    html = html.replace("/*__LOGO__*/", "data:image/webp;base64," + base64.b64encode(f.read()).decode())
 open(os.path.join(ROOT, "index.html"), "w", encoding="utf-8").write(html)
 print(f"index.html gerado — {len(INDICADORES)} indicadores, {len(LIMITES)} limites.")

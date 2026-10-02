@@ -11,6 +11,7 @@ import estilo
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 from matplotlib.ticker import MaxNLocator
+import matplotlib.image as mpimg
 
 ANO = int(os.environ.get("ANO", "2025"))
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -21,6 +22,18 @@ os.makedirs(SAIDA, exist_ok=True)
 E = json.load(open(os.path.join(ROOT, "dados", f"indicadores_{ANO}.json"), encoding="utf-8"))
 FONTE = f"Fonte: SICONFI/Tesouro Nacional (RREO do 6º bimestre e RGF do 3º quadrimestre de {ANO})"
 ESCURO = "#643126"   # terracota escurecido — topo da escala, usado para quem passa da referência
+LOGO = os.path.join(ROOT, "assets", "logo-cobertor-curto.png")
+
+
+def marca(fig, altura=0.068, topo=0.978, direita=0.985):
+    """Logo do Cobertor Curto no canto superior direito, preservando a proporção."""
+    if not os.path.exists(LOGO):
+        return
+    img = mpimg.imread(LOGO)
+    larg_fig, alt_fig = fig.get_size_inches()
+    largura = altura * alt_fig * (img.shape[1] / img.shape[0]) / larg_fig
+    ax = fig.add_axes([direita - largura, topo - altura, largura, altura], zorder=10)
+    ax.imshow(img); ax.axis("off")
 
 # Título afirmativo + subtítulo com unidade e recorte, no padrão editorial do Cobertor Curto.
 # ref: linha de referência legal; sentido: orienta a leitura ("alto_ruim" destaca quem está acima.)
@@ -182,6 +195,7 @@ def ranking(f):
                 ha="right" if perto_da_borda else "center", va="bottom")
 
     estilo.cabecalho(fig, f["titulo"], f["sub"], f.get("apoio"), x=0.02, topo=0.955, tam_titulo=19)
+    marca(fig)
     notas = f.get("nota", "")
     if sem and not notas:
         notas = "Sem dado publicado: " + ", ".join(sem) + "."
@@ -224,7 +238,7 @@ def painel_folga():
             u = e[k]
             ax.add_patch(Rectangle((j + 0.03, i + 0.08), 0.94, 0.84, facecolor=cor(u), edgecolor="none"))
             claro = u is not None and u >= 90
-            ax.text(j + 0.5, i + 0.5, "n.d." if u is None else estilo.fmt(u, 0) + "%",
+            ax.text(j + 0.5, i + 0.5, "n.d." if u is None else estilo.fmt(u, 0).replace("-", "−") + "%",
                     ha="center", va="center", fontsize=9.5,
                     color="white" if claro else estilo.TEXTO,
                     family="Aptos", weight="semibold" if claro else "normal")
@@ -240,6 +254,7 @@ def painel_folga():
                      "Uso do limite de cada regra fiscal, em %, estados, 2025",
                      "100% significa estar exatamente no teto da norma. Ordenado pelo caso mais apertado de cada estado.",
                      x=0.02, topo=0.965, tam_titulo=19)
+    marca(fig)
     estilo.rodape(fig, FONTE,
                   notas="Limites: pessoal (LRF, art. 20), dívida e operações de crédito (Resoluções 40 e 43 de 2001 do Senado),\n"
                         "garantias (Resolução 43/2001, art. 9º) e PPP (Lei 11.079/2004, art. 28). Uso negativo da dívida indica caixa\n"
