@@ -14,8 +14,19 @@ UFS = {11:"RO",12:"AC",13:"AM",14:"RR",15:"PA",16:"AP",17:"TO",21:"MA",22:"PI",2
        24:"RN",25:"PB",26:"PE",27:"AL",28:"SE",29:"BA",31:"MG",32:"ES",33:"RJ",35:"SP",
        41:"PR",42:"SC",43:"RS",50:"MS",51:"MT",52:"GO",53:"DF"}
 
-RREO_ANEXOS = ["RREO-Anexo 01", "RREO-Anexo 02", "RREO-Anexo 03", "RREO-Anexo 06"]
-RGF_ANEXOS  = ["RGF-Anexo 01", "RGF-Anexo 02"]
+RREO_ANEXOS = ["RREO-Anexo 01", "RREO-Anexo 02", "RREO-Anexo 03", "RREO-Anexo 06",
+               "RREO-Anexo 09", "RREO-Anexo 13"]
+RGF_ANEXOS  = ["RGF-Anexo 01", "RGF-Anexo 02", "RGF-Anexo 03", "RGF-Anexo 04"]
+
+# ANEXOS="09,13,rgf03" limita a coleta a esses anexos (util para completar o que falta
+# sem rebaixar o que ja esta em disco). Vazio = todos.
+SO_ANEXOS = [a.strip().lower() for a in os.environ.get("ANEXOS", "").split(",") if a.strip()]
+
+def quer(anexo):
+    if not SO_ANEXOS:
+        return True
+    t = tag(anexo).lower()
+    return any(f == t or f == t.replace("rreo", "").replace("rgf", "") for f in SO_ANEXOS)
 
 def get(endpoint, **params):
     for attempt in range(4):
@@ -28,6 +39,9 @@ def get(endpoint, **params):
             print(f"   ! erro {endpoint} {params.get('id_ente')} {params.get('no_anexo')}: {e}")
             time.sleep(3)
     return []
+
+def tag(anexo):
+    return anexo.replace("RREO-Anexo ", "rreo").replace("RGF-Anexo ", "rgf").replace(" ", "")
 
 def collect_rreo(ente, anexo):
     for per in range(6, 0, -1):
@@ -46,9 +60,6 @@ def collect_rgf(ente, anexo):
             return per, items
     return None, []
 
-def tag(anexo):
-    return anexo.replace("RREO-Anexo ", "rreo").replace("RGF-Anexo ", "rgf").replace(" ", "")
-
 def main():
     manifest = {}
     so = [int(x) for x in sys.argv[1:]] or list(UFS)
@@ -56,12 +67,16 @@ def main():
         uf = UFS[ente]; manifest[uf] = {}
         print(f"\n=== {uf} ({ente}) ===", flush=True)
         for anexo in RREO_ANEXOS:
+            if not quer(anexo):
+                continue
             fn = os.path.join(RAW, f"{uf}_{ANO}_{tag(anexo)}.json")
             per, items = collect_rreo(ente, anexo)
             json.dump(items, open(fn, "w", encoding="utf-8"), ensure_ascii=False)
             manifest[uf][anexo] = {"periodo": per, "n": len(items)}
             print(f"  {anexo}: periodo={per} n={len(items)}", flush=True)
         for anexo in RGF_ANEXOS:
+            if not quer(anexo):
+                continue
             fn = os.path.join(RAW, f"{uf}_{ANO}_{tag(anexo)}.json")
             per, items = collect_rgf(ente, anexo)
             json.dump(items, open(fn, "w", encoding="utf-8"), ensure_ascii=False)
@@ -69,7 +84,8 @@ def main():
             print(f"  {anexo}: periodo={per} n={len(items)}", flush=True)
     mf = os.path.join(RAW, f"_manifest_{ANO}.json")
     old = json.load(open(mf, encoding="utf-8")) if os.path.exists(mf) else {}
-    old.update(manifest)
+    for uf, anexos in manifest.items():
+        old.setdefault(uf, {}).update(anexos)
     json.dump(old, open(mf, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
     print("\nManifesto salvo em", mf)
 

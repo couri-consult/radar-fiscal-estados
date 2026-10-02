@@ -97,6 +97,26 @@
   td .rk { display: inline-block; min-width: 30px; font-size: 10px; color: var(--muted); margin-left: 4px; }
   .nm-sub { color: var(--muted); font-size: 11px; }
 
+  /* === NAV: grupos de dimensão === */
+  nav .grp {
+    font-size: 10px; text-transform: uppercase; letter-spacing: 0.6px; color: var(--muted);
+    padding: 12px 18px 3px 18px; font-weight: 700;
+  }
+
+  /* === HEATMAP DE LIMITES === */
+  table.heat td.cell { text-align: center; font-variant-numeric: tabular-nums; font-weight: 600; font-size: 12px; padding: 6px 4px; }
+  .heat .l0 { background: #e8f1e9; color: #1f5a31; }   /* folga confortável */
+  .heat .l1 { background: #fdf3d6; color: #6b5410; }   /* atenção */
+  .heat .l2 { background: #fde0cc; color: #6b3410; }   /* perto do limite */
+  .heat .l3 { background: #f3d2d7; color: #6b1f2c; }   /* no limite ou acima */
+  .heat .lx { background: var(--panel); color: var(--muted); font-weight: 400; }
+  .heat td.cell small { display: block; font-size: 9.5px; font-weight: 400; opacity: .75; }
+  .heat th.rot { font-size: 11px; line-height: 1.25; vertical-align: bottom; }
+  .heat tbody tr:hover td { outline: 1px solid var(--accent); outline-offset: -1px; }
+  .heat-legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 11.5px; color: var(--muted); margin: 8px 0 2px 0; }
+  .heat-legend span { display: inline-flex; align-items: center; gap: 5px; }
+  .heat-legend i { width: 13px; height: 13px; border-radius: 2px; display: inline-block; }
+
   /* === CALLOUT === */
   .callout {
     background: var(--hl); border-left: 4px solid var(--warn);
@@ -188,8 +208,10 @@
       <div class="sub">SICONFI · exercício <span id="nav-ano"></span></div>
     </div>
     <ul id="nav-list">
-      <li><a href="#visao" class="navlink active">0. Visão geral</a></li>
-      <li><a href="#fontes" class="navlink" id="nav-fontes">7. Fontes &amp; Notas</a></li>
+      <li><a href="#visao" class="navlink active">Visão geral</a></li>
+      <li class="grp" id="nav-grp-sintese">Síntese</li>
+      <li><a href="#folga" class="navlink" id="nav-folga">Painel de folga</a></li>
+      <li><a href="#fontes" class="navlink" id="nav-fontes">Fontes &amp; Notas</a></li>
     </ul>
   </nav>
 
@@ -216,6 +238,33 @@
     </section>
 
     <!-- === SEÇÕES 1–6: geradas por JS a partir de DATA.indicadores === -->
+
+    <!-- === PAINEL DE FOLGA === -->
+    <section id="folga" class="section">
+      <div class="header-bar">
+        <h2>Painel de folga nos limites legais</h2>
+        <span class="meta" id="folga-meta"></span>
+      </div>
+      <div class="thesis">
+        <span class="tag">Como ler</span>
+        <p style="margin: 6px 0 0 0;">Cada célula mostra <strong>quanto do limite legal já foi consumido</strong> — 100% significa estar exatamente no teto. Em cada célula, o número menor é o valor do indicador; o maior, o percentual do limite usado. Ordenado pelo pior caso de cada estado.</p>
+      </div>
+      <div class="heat-legend">
+        <span><i class="l0" style="background:#e8f1e9"></i> até 70% do limite</span>
+        <span><i class="l1" style="background:#fdf3d6"></i> 70% a 90%</span>
+        <span><i class="l2" style="background:#fde0cc"></i> 90% a 100%</span>
+        <span><i class="l3" style="background:#f3d2d7"></i> 100% ou mais</span>
+        <span><i class="lx" style="background:#f7f7f5"></i> sem dado</span>
+      </div>
+      <table class="heat" id="tab-folga"></table>
+      <p class="src" id="folga-src"></p>
+
+      <h3>Limites aplicados</h3>
+      <table id="tab-limites"></table>
+      <div class="callout">
+        <strong>Atenção:</strong> este painel compara os indicadores publicados com os limites nominais das normas. Não substitui a apuração oficial de cumprimento, que admite exclusões, regras de transição e, no caso dos entes em Regime de Recuperação Fiscal (LC 159/2017), suspensão ou reescalonamento de obrigações.
+      </div>
+    </section>
 
     <!-- === FONTES & NOTAS === -->
     <section id="fontes" class="section">
@@ -269,13 +318,17 @@ const DATA = /*__DATA__*/null;
 </script>
 <script>
   // === UTILITÁRIOS ===
-  const fmt1 = v => v == null ? 'n.d.' : v.toLocaleString('pt-BR', {minimumFractionDigits: 1, maximumFractionDigits: 1}) + '%';
+  // normaliza o zero negativo (-0,04 arredondaria para "-0,0%")
+  const fmt1 = v => v == null ? 'n.d.' : (Math.abs(v) < 0.05 ? 0 : v).toLocaleString('pt-BR', {minimumFractionDigits: 1, maximumFractionDigits: 1}) + '%';
+  const fmtRS = v => v == null ? 'n.d.' : 'R$ ' + v.toLocaleString('pt-BR', {minimumFractionDigits: 0, maximumFractionDigits: 0});
   const fmtBi = v => v == null ? 'n.d.' : (v / 1e9).toLocaleString('pt-BR', {minimumFractionDigits: 1, maximumFractionDigits: 1});
   const ord = n => n + 'º';
   const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
   const mediana = arr => { const a = arr.slice().sort((x, y) => x - y); const m = a.length >> 1; return a.length % 2 ? a[m] : (a[m - 1] + a[m]) / 2; };
+  // Formata conforme a unidade do indicador (% por padrão, R$ para valores per capita)
+  const val = (ind, v) => ind.unidade === 'R$' ? fmtRS(v) : fmt1(v);
 
-  const E = DATA.estados, IND = DATA.indicadores;
+  const E = DATA.estados, IND = DATA.indicadores, LIM = DATA.limites;
   document.getElementById('nav-ano').textContent = DATA.ano;
 
   // Ranking descendente (1º = maior) por indicador; n.d. fica de fora
@@ -317,11 +370,11 @@ const DATA = /*__DATA__*/null;
     const step = niceStep(span);
     for (let g = Math.ceil(lo / step) * step; g <= hi + 1e-9; g += step) {
       s += `<line class="ax" x1="${x(g)}" y1="${PAD_T - 6}" x2="${x(g)}" y2="${H - PAD_B}"/>`;
-      s += `<text class="nm" x="${x(g)}" y="${PAD_T - 10}" text-anchor="middle">${g.toLocaleString('pt-BR')}%</text>`;
+      s += `<text class="nm" x="${x(g)}" y="${PAD_T - 10}" text-anchor="middle">${g.toLocaleString('pt-BR')}${ind.unidade === 'R$' ? '' : '%'}</text>`;
     }
     // mediana
     s += `<line class="med" x1="${x(med)}" y1="${PAD_T - 6}" x2="${x(med)}" y2="${H - PAD_B}"/>`;
-    s += `<text class="medlbl" x="${x(med) + 3}" y="${H - PAD_B + 11}">mediana ${fmt1(med)}</text>`;
+    s += `<text class="medlbl" x="${x(med) + 3}" y="${H - PAD_B + 11}">mediana ${val(ind, med)}</text>`;
     // referência
     if (ind.ref != null) {
       s += `<line class="ref" x1="${x(ind.ref)}" y1="${PAD_T - 6}" x2="${x(ind.ref)}" y2="${H - PAD_B}"/>`;
@@ -331,7 +384,7 @@ const DATA = /*__DATA__*/null;
       const y = PAD_T + i * RH, v = r[ind.k], rk = RANK[ind.k][r.uf];
       const bx = Math.min(x0, x(v)), bw = Math.abs(x(v) - x0);
       const cls = barClass(ind, v);
-      const label = fmt1(v);
+      const label = val(ind, v);
       const labelW = label.length * 7 + 8;
       const inside = bw > labelW + 6 && v >= 0;
       const lx = v >= 0 ? (inside ? x(v) - 5 : x(v) + 5) : bx - 5;
@@ -353,43 +406,52 @@ const DATA = /*__DATA__*/null;
   function memTable(ind) {
     const rows = E.filter(e => e[ind.k] != null).sort((a, b) => b[ind.k] - a[ind.k]);
     const extra = ind.k === 'i3_pessoal_rcl' ? '<th class="num">DTP/RCL — RGF (LRF)</th>' : (ind.k === 'i6_dcl_rcl' ? '<th class="num">% oficial RGF</th>' : '');
-    let s = `<table><thead><tr><th>#</th><th>UF</th><th class="num">Numerador</th><th class="num">Denominador</th><th class="num">Indicador</th>${extra}</tr></thead><tbody>`;
+    const un = ind.unidade === 'R$' ? ' (R$ bi / hab.)' : ' (R$ bilhões)';
+    let s = `<table><thead><tr><th>#</th><th>UF</th><th class="num">Numerador${ind.unidade === 'R$' ? ' (R$ bi)' : ''}</th><th class="num">Denominador${ind.unidade === 'R$' ? ' (hab.)' : ''}</th><th class="num">Indicador</th>${extra}</tr></thead><tbody>`;
     rows.forEach((r, i) => {
       const ex = ind.k === 'i3_pessoal_rcl' ? `<td class="num">${fmt1(r.dtp_pct_rcl_rgf)}</td>` : (ind.k === 'i6_dcl_rcl' ? `<td class="num">${fmt1(r.dcl_pct_rcl_rgf)}</td>` : '');
-      s += `<tr><td>${ord(i + 1)}</td><td><strong>${r.uf}</strong> <span class="nm-sub">${esc(r.nome)}</span></td><td class="num">${fmtBi(r[ind.num])}</td><td class="num">${fmtBi(r[ind.den])}</td><td class="num"><strong>${fmt1(r[ind.k])}</strong></td>${ex}</tr>`;
+      s += `<tr><td>${ord(i + 1)}</td><td><strong>${r.uf}</strong> <span class="nm-sub">${esc(r.nome)}</span></td><td class="num">${ind.unidade === 'R$' ? fmtBi(r[ind.num]) : fmtBi(r[ind.num])}</td><td class="num">${ind.unidade === 'R$' ? (r[ind.den] || 0).toLocaleString('pt-BR') : fmtBi(r[ind.den])}</td><td class="num"><strong>${val(ind, r[ind.k])}</strong></td>${ex}</tr>`;
     });
     return s + '</tbody></table>';
   }
 
   // === SEÇÕES 1–6 ===
-  const main = document.getElementById('main'), navList = document.getElementById('nav-list'), navFontes = document.getElementById('nav-fontes');
+  const main = document.getElementById('main'), navList = document.getElementById('nav-list');
+  const navAncora = document.getElementById('nav-grp-sintese');
+  let grupoAtual = null;
   IND.forEach((ind, idx) => {
     const n = idx + 1, id = 'ind' + n;
+    if (ind.grupo !== grupoAtual) {                     // cabeçalho de dimensão na navegação
+      grupoAtual = ind.grupo;
+      const h = document.createElement('li');
+      h.className = 'grp'; h.textContent = ind.grupo;
+      navList.insertBefore(h, navAncora);
+    }
     const li = document.createElement('li');
     li.innerHTML = `<a href="#${id}" class="navlink">${n}. ${esc(ind.titulo)}</a>`;
-    navList.insertBefore(li, navFontes.parentNode);
+    navList.insertBefore(li, navAncora);
 
     const vals = E.filter(e => e[ind.k] != null);
     const top = vals.reduce((a, b) => b[ind.k] > a[ind.k] ? b : a);
     const bot = vals.reduce((a, b) => b[ind.k] < a[ind.k] ? b : a);
     const med = mediana(vals.map(e => e[ind.k]));
     const sn = vals.reduce((s, e) => s + (e[ind.num] || 0), 0), sd = vals.reduce((s, e) => s + (e[ind.den] || 0), 0);
-    const agg = sd ? 100 * sn / sd : null;
+    const agg = sd ? (ind.unidade === 'R$' ? sn / sd : 100 * sn / sd) : null;
 
     const sec = document.createElement('section');
     sec.id = id; sec.className = 'section';
     sec.innerHTML = `
       <div class="header-bar">
         <h2>${n}. ${esc(ind.titulo)}</h2>
-        <span class="meta">${esc(ind.fonte)}</span>
+        <span class="meta">${esc(ind.grupo)} · ${esc(ind.fonte)}</span>
       </div>
       <p style="margin:4px 0 8px 0;"><strong>${esc(ind.longo)}</strong></p>
       <div class="formula">${esc(ind.formula)}</div>
       <div class="kpi-grid">
-        <div class="kpi"><div class="label">Maior — ${top.uf}</div><div class="value">${fmt1(top[ind.k])}</div><div class="delta">${esc(top.nome)}</div></div>
-        <div class="kpi"><div class="label">Menor — ${bot.uf}</div><div class="value">${fmt1(bot[ind.k])}</div><div class="delta">${esc(bot.nome)}</div></div>
-        <div class="kpi"><div class="label">Mediana (${vals.length} UFs)</div><div class="value">${fmt1(med)}</div><div class="delta">valor central da distribuição</div></div>
-        <div class="kpi"><div class="label">Agregado dos estados</div><div class="value">${fmt1(agg)}</div><div class="delta">soma dos numeradores ÷ soma dos denominadores</div></div>
+        <div class="kpi"><div class="label">Maior — ${top.uf}</div><div class="value">${val(ind, top[ind.k])}</div><div class="delta">${esc(top.nome)}</div></div>
+        <div class="kpi"><div class="label">Menor — ${bot.uf}</div><div class="value">${val(ind, bot[ind.k])}</div><div class="delta">${esc(bot.nome)}</div></div>
+        <div class="kpi"><div class="label">Mediana (${vals.length} UFs)</div><div class="value">${val(ind, med)}</div><div class="delta">valor central da distribuição</div></div>
+        <div class="kpi"><div class="label">${ind.unidade === 'R$' ? 'Média ponderada' : 'Agregado dos estados'}</div><div class="value">${val(ind, agg)}</div><div class="delta">soma dos numeradores ÷ soma dos denominadores</div></div>
       </div>
       <div class="chart-tools">
         <span>Ordem:</span>
@@ -405,7 +467,7 @@ const DATA = /*__DATA__*/null;
         ${memTable(ind)}
       </details>
       <p class="src">Fonte: ${esc(ind.fonte)} Elaboração própria.</p>`;
-    main.insertBefore(sec, document.getElementById('fontes'));
+    main.insertBefore(sec, document.getElementById('folga'));
     const wrap = sec.querySelector('.chart-wrap');
     wrap.innerHTML = chart(ind, true);
     sec.querySelectorAll('.btn').forEach(b => b.addEventListener('click', () => {
@@ -420,7 +482,7 @@ const DATA = /*__DATA__*/null;
   document.getElementById('visao-kpis').innerHTML = IND.map((ind, i) => {
     const vals = E.filter(e => e[ind.k] != null);
     const top = vals.reduce((a, b) => b[ind.k] > a[ind.k] ? b : a), bot = vals.reduce((a, b) => b[ind.k] < a[ind.k] ? b : a);
-    return `<div class="kpi"><div class="label">${i + 1}. ${esc(ind.titulo)}</div><div class="value">${fmt1(mediana(vals.map(e => e[ind.k])))}</div><div class="delta">mediana · máx ${top.uf} ${fmt1(top[ind.k])} · mín ${bot.uf} ${fmt1(bot[ind.k])}</div></div>`;
+    return `<div class="kpi"><div class="label">${i + 1}. ${esc(ind.titulo)}</div><div class="value">${val(ind, mediana(vals.map(e => e[ind.k])))}</div><div class="delta">mediana · máx ${top.uf} ${val(ind, top[ind.k])} · mín ${bot.uf} ${val(ind, bot[ind.k])}</div></div>`;
   }).join('');
 
   let sortKey = 'uf', sortDesc = false;
@@ -431,12 +493,20 @@ const DATA = /*__DATA__*/null;
       if (av == null) return 1; if (bv == null) return -1;
       return sortDesc ? bv - av : av - bv;
     });
-    let s = `<thead><tr><th class="sortable ${sortKey === 'uf' ? 'on' : ''}" data-k="uf">UF</th>`;
+    // 1ª linha: dimensões agrupadas; 2ª linha: indicadores (clicáveis para ordenar)
+    let s = '<thead><tr><th rowspan="2" class="sortable ' + (sortKey === 'uf' ? 'on' : '') + '" data-k="uf">UF</th>';
+    let g = null, span = 0, grupos = '';
+    IND.forEach(ind => {
+      if (ind.grupo !== g) { if (g !== null) grupos += `<th class="num" colspan="${span}">${esc(g)}</th>`; g = ind.grupo; span = 0; }
+      span++;
+    });
+    grupos += `<th class="num" colspan="${span}">${esc(g)}</th>`;
+    s += grupos + '</tr><tr>';
     IND.forEach((ind, i) => s += `<th class="num sortable ${sortKey === ind.k ? 'on' : ''}" data-k="${ind.k}">${i + 1}. ${esc(ind.titulo)}${sortKey === ind.k ? (sortDesc ? ' ▼' : ' ▲') : ''}</th>`);
     s += `</tr></thead><tbody>`;
     rows.forEach(r => {
       s += `<tr><td><strong>${r.uf}</strong> <span class="nm-sub">${esc(r.nome)}</span></td>`;
-      IND.forEach(ind => s += `<td class="num">${fmt1(r[ind.k])}<span class="rk">${r[ind.k] == null ? '' : '(' + ord(RANK[ind.k][r.uf]) + ')'}</span></td>`);
+      IND.forEach(ind => s += `<td class="num">${val(ind, r[ind.k])}<span class="rk">${r[ind.k] == null ? '' : '(' + ord(RANK[ind.k][r.uf]) + ')'}</span></td>`);
       s += `</tr>`;
     });
     const tab = document.getElementById('tab-geral');
@@ -450,9 +520,53 @@ const DATA = /*__DATA__*/null;
   renderTab();
   document.getElementById('visao-src').textContent = `Fonte: SICONFI/STN (RREO e RGF ${DATA.ano}). Elaboração própria. Gerado em ${DATA.gerado}.`;
 
+  // === PAINEL DE FOLGA ===
+  // Classe de cor pelo percentual do limite consumido
+  function heatCls(u) {
+    if (u == null) return 'lx';
+    return u >= 100 ? 'l3' : u >= 90 ? 'l2' : u >= 70 ? 'l1' : 'l0';
+  }
+  function limiteDe(e, L) {                       // limite efetivo do ente (o publicado, ou o padrão da norma)
+    const v = L.lim ? e[L.lim] : null;
+    return v == null ? L.pad : v;
+  }
+  function renderFolga() {
+    // pior caso = maior uso de limite entre as dimensões; ordena do mais apertado ao mais folgado
+    const rows = E.map(e => {
+      const usos = LIM.map(L => e[L.k]).filter(v => v != null);
+      return {e, pior: usos.length ? Math.max(...usos) : -1};
+    }).sort((a, b) => b.pior - a.pior);
+    let s = '<thead><tr><th>UF</th>' +
+      LIM.map(L => `<th class="num rot">${esc(L.titulo)}<br><span class="nm-sub">${esc(L.norma.split('—')[1] || '').trim()}</span></th>`).join('') +
+      '<th class="num rot">Pior caso</th></tr></thead><tbody>';
+    rows.forEach(({e, pior}) => {
+      s += `<tr><td><strong>${e.uf}</strong> <span class="nm-sub">${esc(e.nome)}</span></td>`;
+      LIM.forEach(L => {
+        const u = e[L.k], ind = e[L.ind], lim = limiteDe(e, L);
+        s += `<td class="cell ${heatCls(u)}" title="${esc(e.nome)} — ${esc(L.titulo)}: ${fmt1(ind)} de um limite de ${fmt1(lim)}">` +
+             (u == null ? 'n.d.' : `${fmt1(u)}<small>${fmt1(ind)} de ${fmt1(lim)}</small>`) + '</td>';
+      });
+      s += `<td class="cell ${heatCls(pior < 0 ? null : pior)}">${pior < 0 ? 'n.d.' : fmt1(pior)}</td></tr>`;
+    });
+    document.getElementById('tab-folga').innerHTML = s + '</tbody>';
+  }
+  renderFolga();
+  const estourando = E.filter(e => LIM.some(L => e[L.k] != null && e[L.k] >= 100));
+  document.getElementById('folga-meta').textContent = `${LIM.length} limites · ${DATA.ano}`;
+  document.getElementById('folga-src').innerHTML = (estourando.length
+      ? `<strong>Acima de algum limite:</strong> ${estourando.map(e => e.uf).join(', ')}. `
+      : 'Nenhum ente aparece acima dos limites nominais com os dados publicados. ')
+    + `Fonte: SICONFI/STN. Elaboração própria.`;
+  document.getElementById('tab-limites').innerHTML =
+    '<thead><tr><th>Dimensão</th><th>Indicador usado</th><th>Limite</th><th>Fonte</th></tr></thead><tbody>' +
+    LIM.map(L => {
+      const usados = [...new Set(E.map(e => limiteDe(e, L)).filter(v => v != null).map(v => fmt1(v)))];
+      return `<tr><td><strong>${esc(L.titulo)}</strong></td><td>${esc(L.norma.split('—')[0].trim())}</td><td>${usados.length === 1 ? usados[0] : usados.join(' / ')} da RCL</td><td class="nm-sub">${esc(L.fonte)}</td></tr>`;
+    }).join('') + '</tbody>';
+
   // === FONTES: definições e períodos ===
-  document.getElementById('tab-defs').innerHTML = '<thead><tr><th>#</th><th>Indicador</th><th>Fórmula</th><th>Fonte</th></tr></thead><tbody>' +
-    IND.map((ind, i) => `<tr><td>${i + 1}</td><td><strong>${esc(ind.titulo)}</strong><br><span class="nm-sub">${esc(ind.longo)}</span></td><td>${esc(ind.formula)}</td><td style="font-size:12px">${esc(ind.fonte)}</td></tr>`).join('') + '</tbody>';
+  document.getElementById('tab-defs').innerHTML = '<thead><tr><th>#</th><th>Dimensão</th><th>Indicador</th><th>Fórmula</th><th>Fonte</th></tr></thead><tbody>' +
+    IND.map((ind, i) => `<tr><td>${i + 1}</td><td class="nm-sub">${esc(ind.grupo)}</td><td><strong>${esc(ind.titulo)}</strong><br><span class="nm-sub">${esc(ind.longo)}</span></td><td>${esc(ind.formula)}</td><td style="font-size:12px">${esc(ind.fonte)}</td></tr>`).join('') + '</tbody>';
   const fora = E.filter(e => e.periodo_rreo !== 6 || e.periodo_rgf !== 3);
   document.getElementById('nota-periodos').innerHTML = fora.length
     ? `<strong>Períodos divergentes:</strong> ${fora.map(e => `${e.uf} (RREO ${e.periodo_rreo}º bim., RGF ${e.periodo_rgf}º quad.)`).join('; ')} — ainda não haviam homologado o último período na data de coleta; valores parciais, não comparáveis.`
