@@ -7,7 +7,7 @@ limites legais de pessoal, dívida, garantias, operações de crédito e PPP.
 
 `index.html` é um painel estático e autocontido (dados embutidos, SVG próprio, sem CDN).
 
-**🔗 Painel no ar:** https://couri-consult.github.io/ranking-fiscal-estados/
+**🔗 Painel no ar:** https://couri-consult.github.io/radar-fiscal-estados/
 
 ## Indicadores
 
