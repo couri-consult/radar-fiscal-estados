@@ -146,6 +146,8 @@
   .ind-nome { font-size: 17px; font-weight: 700; color: var(--accent); line-height: 1.25; }
   .ind-sub  { font-size: 12px; color: var(--muted); margin: 4px 0 14px 0; }
   .ind-nota { font-size: 11.5px; color: var(--muted); margin-top: 14px; line-height: 1.45; }
+  .ver-ficha { display: inline-block; margin-top: 10px; font-size: 12px; color: var(--accent); text-decoration: none; }
+  .ver-ficha:hover { text-decoration: underline; }
 
   .escala { display: flex; flex-direction: column; gap: 3px; margin-bottom: 14px; }
   .escala .faixa { display: flex; align-items: center; gap: 8px; font-size: 11.5px; }
@@ -186,6 +188,27 @@
     .strip .lim { font-size: 9px; }
   }
 
+  /* === FICHAS DOS INDICADORES === */
+  h3.fgrupo {
+    font-size: 11px; text-transform: uppercase; letter-spacing: .6px; color: var(--muted);
+    border: 0; margin: 22px 0 6px 0; padding: 0; font-weight: 700;
+  }
+  h3.fgrupo:first-child { margin-top: 10px; }
+  details.ficha { margin: 0 0 4px 0; border: 1px solid var(--line); border-radius: 3px; background: var(--bg); }
+  details.ficha[open] { border-color: var(--accent); }
+  details.ficha > summary {
+    display: flex; align-items: baseline; gap: 10px; padding: 9px 12px; cursor: pointer;
+    font-weight: 400; color: var(--ink); font-size: 13px;
+  }
+  details.ficha > summary:hover { background: var(--panel); }
+  details.ficha .fnum { color: var(--muted); font-size: 11.5px; min-width: 16px; font-variant-numeric: tabular-nums; }
+  details.ficha .ftit { font-weight: 700; color: var(--accent); flex: 1; }
+  details.ficha .fres { font-size: 11.5px; color: var(--muted); font-variant-numeric: tabular-nums; text-align: right; }
+  details.ficha .fres b { color: var(--ink); font-weight: 700; }
+  details.ficha .fcorpo { padding: 2px 14px 12px 14px; border-top: 1px solid var(--line); }
+  details.ficha .flongo { font-weight: 600; margin: 10px 0 8px 0; }
+  details.ficha .kpi-grid { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+
   /* === CALLOUT === */
   .callout {
     background: var(--hl); border-left: 4px solid var(--accent);
@@ -207,7 +230,6 @@
   }
 
   /* === RANKING (SVG) === */
-  .chart-wrap { margin: 14px 0; }
   .chart-tools { display: flex; gap: 8px; align-items: center; margin: 8px 0; font-size: 12px; color: var(--muted); flex-wrap: wrap; }
   .btn {
     font: inherit; font-size: 12px; padding: 4px 10px; border: 1px solid var(--line);
@@ -219,21 +241,10 @@
   .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 2px; }
   svg { max-width: 100%; height: auto; }
   svg text { font-family: "Aptos", "Segoe UI Variable Text", "Segoe UI", -apple-system, Roboto, Helvetica, Arial, sans-serif; }
-  svg .rk  { font-size: 10px; fill: var(--muted); }
-  svg .uf  { font-size: 12px; font-weight: 600; fill: var(--ink); }
   svg .nm  { font-size: 10px; fill: var(--muted); }
-  svg .lbl { font-size: 11.5px; font-weight: 700; fill: var(--ink); }
-  svg .lbl.inside { fill: #fff; }
   svg .ax  { stroke: var(--line); stroke-width: 1; }
-  svg .zero { stroke: var(--ink); stroke-width: 1; }
-  svg .ref { stroke: var(--escuro); stroke-width: 1.2; stroke-dasharray: 4 3; }
-  svg .reflbl { font-size: 10px; fill: var(--escuro); font-weight: 600; }
   svg .med { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 2 3; }
   svg .medlbl { font-size: 10px; fill: var(--muted); }
-  svg .bar { fill: var(--accent); }
-  svg .bar.bad { fill: var(--escuro); }   /* acima da referência legal */
-  svg .bar.good { fill: var(--claro); }   /* folga: DCL negativa */
-  svg .row:hover .bar { opacity: 0.8; }
 
   /* === UTILITÁRIOS === */
   ul.tight { margin: 6px 0; padding-left: 22px; }
@@ -249,6 +260,8 @@
     nav { position: relative; height: auto; }
     main { padding: 16px; max-width: 100vw; overflow-x: hidden; }
     .kpi-grid.six { grid-template-columns: 1fr 1fr; }
+    details.ficha > summary { flex-wrap: wrap; }
+    details.ficha .fres { width: 100%; text-align: left; }
     .header-bar { flex-direction: column; align-items: flex-start; }
     .meta { text-align: left; }
     .chart-wrap { overflow-x: auto; }
@@ -280,9 +293,9 @@
     </div>
     <ul id="nav-list">
       <li><a href="#visao" class="navlink active">Visão geral</a></li>
-      <li class="grp" id="nav-grp-sintese">Síntese</li>
-      <li><a href="#folga" class="navlink" id="nav-folga">Painel de folga</a></li>
-      <li><a href="#fontes" class="navlink" id="nav-fontes">Fontes &amp; Notas</a></li>
+      <li><a href="#fichas-sec" class="navlink">Fichas dos indicadores</a></li>
+      <li><a href="#folga" class="navlink">Painel de folga</a></li>
+      <li><a href="#fontes" class="navlink">Fontes &amp; Notas</a></li>
     </ul>
   </nav>
 
@@ -311,6 +324,7 @@
           <div class="escala" id="mapa-escala"></div>
           <div class="extremos" id="mapa-extremos"></div>
           <div class="ind-nota" id="mapa-nota"></div>
+          <a class="ver-ficha" id="ver-ficha" href="#fichas-sec">ver ficha completa do indicador →</a>
         </aside>
       </div>
 
@@ -329,7 +343,19 @@
       <p class="src" id="visao-src"></p>
     </section>
 
-    <!-- === SEÇÕES 1–6: geradas por JS a partir de DATA.indicadores === -->
+    <!-- === FICHAS DOS INDICADORES === -->
+    <section id="fichas-sec" class="section">
+      <div class="header-bar">
+        <h2>Fichas dos indicadores</h2>
+        <span class="meta">17 indicadores · definição, fonte e memória de cálculo</span>
+      </div>
+      <div class="thesis">
+        <span class="tag">Para que serve esta seção</span>
+        <p style="margin: 6px 0 0 0;">Cada ficha traz como o indicador é calculado, de qual demonstrativo vem, o limite legal quando existe e a tabela com numerador e denominador por estado — o rastro que permite conferir qualquer número do painel. Os rankings e a comparação entre estados estão na <a href="#visao" class="navlink">visão geral</a>.</p>
+      </div>
+      <div class="chart-tools"><button class="btn" id="abrir-tudo" data-estado="fechado">abrir todas</button></div>
+      <div id="fichas"></div>
+    </section>
 
     <!-- === PAINEL DE FOLGA === -->
     <section id="folga" class="section">
@@ -435,70 +461,6 @@ const DATA = /*__DATA__*/null;
     ok.forEach((e, i) => RANK[ind.k][e.uf] = i + 1);
   });
 
-  // Classe semântica da barra (só onde há referência objetiva)
-  function barClass(ind, v) {
-    if (ind.k === 'i6_dcl_rcl') return v > 200 ? 'bad' : (v < 0 ? 'good' : '');
-    if (ind.k === 'i4_despcorr_reccorr') return v >= 100 ? 'bad' : '';
-    return '';
-  }
-
-  function niceStep(span) {
-    const raw = span / 6, p = Math.pow(10, Math.floor(Math.log10(raw)));
-    const m = raw / p;
-    return (m < 1.5 ? 1 : m < 3 ? 2 : m < 7 ? 5 : 10) * p;
-  }
-
-  // === GRÁFICO DE RANKING (SVG) ===
-  function chart(ind, desc) {
-    const rows = E.filter(e => e[ind.k] != null).sort((a, b) => desc ? b[ind.k] - a[ind.k] : a[ind.k] - b[ind.k]);
-    const nd = E.filter(e => e[ind.k] == null);
-    const W = 920, RH = 22, PAD_T = 26, PAD_B = 16, LX = 200, RX = 70;
-    const H = PAD_T + rows.length * RH + PAD_B;
-    const vals = rows.map(r => r[ind.k]);
-    let lo = Math.min(0, ...vals), hi = Math.max(0, ...vals);
-    if (ind.ref != null) hi = Math.max(hi, ind.ref);
-    const med = mediana(vals);
-    const span = (hi - lo) || 1;
-    const x = v => LX + (v - lo) / span * (W - LX - RX);
-    const x0 = x(0);
-    let s = `<svg viewBox="0 0 ${W} ${H}" width="${W}" role="img" aria-label="Ranking ${esc(ind.titulo)}">`;
-    // grade
-    const step = niceStep(span);
-    for (let g = Math.ceil(lo / step) * step; g <= hi + 1e-9; g += step) {
-      s += `<line class="ax" x1="${x(g)}" y1="${PAD_T - 6}" x2="${x(g)}" y2="${H - PAD_B}"/>`;
-      s += `<text class="nm" x="${x(g)}" y="${PAD_T - 10}" text-anchor="middle">${g.toLocaleString('pt-BR')}${ind.unidade === 'R$' ? '' : '%'}</text>`;
-    }
-    // mediana
-    s += `<line class="med" x1="${x(med)}" y1="${PAD_T - 6}" x2="${x(med)}" y2="${H - PAD_B}"/>`;
-    s += `<text class="medlbl" x="${x(med) + 3}" y="${H - PAD_B + 11}">mediana ${val(ind, med)}</text>`;
-    // referência
-    if (ind.ref != null) {
-      s += `<line class="ref" x1="${x(ind.ref)}" y1="${PAD_T - 6}" x2="${x(ind.ref)}" y2="${H - PAD_B}"/>`;
-      s += `<text class="reflbl" x="${x(ind.ref) - 3}" y="${H - PAD_B + 11}" text-anchor="end">${esc(ind.ref_label)}</text>`;
-    }
-    rows.forEach((r, i) => {
-      const y = PAD_T + i * RH, v = r[ind.k], rk = RANK[ind.k][r.uf];
-      const bx = Math.min(x0, x(v)), bw = Math.abs(x(v) - x0);
-      const cls = barClass(ind, v);
-      const label = val(ind, v);
-      const labelW = label.length * 7 + 8;
-      const inside = bw > labelW + 6 && v >= 0;
-      const lx = v >= 0 ? (inside ? x(v) - 5 : x(v) + 5) : bx - 5;
-      const anchor = (v >= 0 && !inside) ? 'start' : 'end';
-      s += `<g class="row"><title>${esc(r.nome)}: ${label} (${ord(rk)} de ${rows.length})</title>`;
-      s += `<text class="rk" x="${LX - 172}" y="${y + 15}" text-anchor="end">${ord(rk)}</text>`;
-      s += `<text class="uf" x="${LX - 162}" y="${y + 15}">${r.uf}</text>`;
-      s += `<text class="nm" x="${LX - 132}" y="${y + 15}">${esc(r.nome)}</text>`;
-      s += `<rect class="bar ${cls}" x="${bx}" y="${y + 3}" width="${Math.max(bw, 0.5)}" height="${RH - 6}" rx="1"/>`;
-      s += `<text class="lbl ${inside ? 'inside' : ''}" x="${lx}" y="${y + 15}" text-anchor="${anchor}">${label}</text>`;
-      s += `</g>`;
-    });
-    s += `<line class="zero" x1="${x0}" y1="${PAD_T - 6}" x2="${x0}" y2="${H - PAD_B}"/>`;
-    s += `</svg>`;
-    if (nd.length) s += `<p class="src">Sem dado: ${nd.map(e => e.uf).join(', ')}.</p>`;
-    return s;
-  }
-
   function memTable(ind) {
     const rows = E.filter(e => e[ind.k] != null).sort((a, b) => b[ind.k] - a[ind.k]);
     const extra = ind.k === 'i3_pessoal_rcl' ? '<th class="num">DTP/RCL — RGF (LRF)</th>'
@@ -515,66 +477,54 @@ const DATA = /*__DATA__*/null;
     return s + '</tbody></table>';
   }
 
-  // === SEÇÕES 1–6 ===
-  const main = document.getElementById('main'), navList = document.getElementById('nav-list');
-  const navAncora = document.getElementById('nav-grp-sintese');
-  let grupoAtual = null;
-  IND.forEach((ind, idx) => {
-    const n = idx + 1, id = 'ind' + n;
-    if (ind.grupo !== grupoAtual) {                     // cabeçalho de dimensão na navegação
-      grupoAtual = ind.grupo;
-      const h = document.createElement('li');
-      h.className = 'grp'; h.textContent = ind.grupo;
-      navList.insertBefore(h, navAncora);
-    }
-    const li = document.createElement('li');
-    li.innerHTML = `<a href="#${id}" class="navlink">${n}. ${esc(ind.titulo)}</a>`;
-    navList.insertBefore(li, navAncora);
-
+  // === FICHAS DOS INDICADORES ===
+  // Uma ficha por indicador: o que define o número (fórmula, fonte, limite) e o que
+  // permite auditá-lo (memória de cálculo). O ranking visual fica na visão geral.
+  function ficha(ind, n) {
     const vals = E.filter(e => e[ind.k] != null);
     const top = vals.reduce((a, b) => b[ind.k] > a[ind.k] ? b : a);
     const bot = vals.reduce((a, b) => b[ind.k] < a[ind.k] ? b : a);
     const med = mediana(vals.map(e => e[ind.k]));
-    const sn = vals.reduce((s, e) => s + (e[ind.num] || 0), 0), sd = vals.reduce((s, e) => s + (e[ind.den] || 0), 0);
+    const sn = vals.reduce((t, e) => t + (e[ind.num] || 0), 0);
+    const sd = vals.reduce((t, e) => t + (e[ind.den] || 0), 0);
     const agg = sd ? (ind.unidade === 'R$' ? sn / sd : 100 * sn / sd) : null;
+    const nd = E.filter(e => e[ind.k] == null);
+    return `<details class="ficha" id="ficha${n}">
+      <summary><span class="fnum">${n}</span><span class="ftit">${esc(ind.titulo)}</span>` +
+      `<span class="fres">mediana <b>${val(ind, med)}</b> · ${top.uf} ${val(ind, top[ind.k])} → ${bot.uf} ${val(ind, bot[ind.k])}</span></summary>
+      <div class="fcorpo">
+        <p class="flongo">${esc(ind.longo)}</p>
+        <div class="formula">${esc(ind.formula)}</div>
+        <div class="kpi-grid">
+          <div class="kpi"><div class="label">Maior — ${top.uf}</div><div class="value">${val(ind, top[ind.k])}</div><div class="delta">${esc(top.nome)}</div></div>
+          <div class="kpi"><div class="label">Menor — ${bot.uf}</div><div class="value">${val(ind, bot[ind.k])}</div><div class="delta">${esc(bot.nome)}</div></div>
+          <div class="kpi"><div class="label">Mediana (${vals.length} UFs)</div><div class="value">${val(ind, med)}</div><div class="delta">valor central da distribuição</div></div>
+          <div class="kpi"><div class="label">${ind.unidade === 'R$' ? 'Média ponderada' : 'Agregado dos estados'}</div><div class="value">${val(ind, agg)}</div><div class="delta">soma dos numeradores ÷ soma dos denominadores</div></div>
+        </div>
+        ${ind.ref != null ? `<div class="callout"><strong>Referência:</strong> ${esc(ind.ref_label)}.</div>` : ''}
+        <p><strong>Leitura.</strong> ${esc(ind.leitura)}</p>
+        ${nd.length ? `<p class="src">Sem dado publicado: ${nd.map(e => e.uf).join(', ')}.</p>` : ''}
+        <details><summary>Memória de cálculo (R$ bilhões)</summary>${memTable(ind)}</details>
+        <p class="src">Fonte: ${esc(ind.fonte)} ${CREDITO}</p>
+      </div>
+    </details>`;
+  }
 
-    const sec = document.createElement('section');
-    sec.id = id; sec.className = 'section';
-    sec.innerHTML = `
-      <div class="header-bar">
-        <h2>${n}. ${esc(ind.titulo)}</h2>
-        <span class="meta">${esc(ind.grupo)} · ${esc(ind.fonte)}</span>
-      </div>
-      <p style="margin:4px 0 8px 0;"><strong>${esc(ind.longo)}</strong></p>
-      <div class="formula">${esc(ind.formula)}</div>
-      <div class="kpi-grid">
-        <div class="kpi"><div class="label">Maior — ${top.uf}</div><div class="value">${val(ind, top[ind.k])}</div><div class="delta">${esc(top.nome)}</div></div>
-        <div class="kpi"><div class="label">Menor — ${bot.uf}</div><div class="value">${val(ind, bot[ind.k])}</div><div class="delta">${esc(bot.nome)}</div></div>
-        <div class="kpi"><div class="label">Mediana (${vals.length} UFs)</div><div class="value">${val(ind, med)}</div><div class="delta">valor central da distribuição</div></div>
-        <div class="kpi"><div class="label">${ind.unidade === 'R$' ? 'Média ponderada' : 'Agregado dos estados'}</div><div class="value">${val(ind, agg)}</div><div class="delta">soma dos numeradores ÷ soma dos denominadores</div></div>
-      </div>
-      <div class="chart-tools">
-        <span>Ordem:</span>
-        <button class="btn on" data-desc="1">maior → menor</button>
-        <button class="btn" data-desc="0">menor → maior</button>
-        ${ind.ref != null ? `<span class="legend"><i style="background:var(--escuro)"></i> acima da referência</span>` : ''}
-        ${ind.k === 'i6_dcl_rcl' ? `<span class="legend"><i style="background:var(--claro)"></i> DCL negativa (caixa e haveres &gt; dívida)</span>` : ''}
-      </div>
-      <div class="chart-wrap"></div>
-      <p><strong>Leitura.</strong> ${esc(ind.leitura)}</p>
-      <details>
-        <summary>Memória de cálculo (R$ bilhões)</summary>
-        ${memTable(ind)}
-      </details>
-      <p class="src">Fonte: ${esc(ind.fonte)} ${CREDITO}</p>`;
-    main.insertBefore(sec, document.getElementById('folga'));
-    const wrap = sec.querySelector('.chart-wrap');
-    wrap.innerHTML = chart(ind, true);
-    sec.querySelectorAll('.btn').forEach(b => b.addEventListener('click', () => {
-      sec.querySelectorAll('.btn').forEach(o => o.classList.remove('on')); b.classList.add('on');
-      wrap.innerHTML = chart(ind, b.dataset.desc === '1');
-    }));
-  });
+  (function montaFichas() {
+    let g = null, html = '';
+    IND.forEach((ind, i) => {
+      if (ind.grupo !== g) { g = ind.grupo; html += `<h3 class="fgrupo">${esc(g)}</h3>`; }
+      html += ficha(ind, i + 1);
+    });
+    document.getElementById('fichas').innerHTML = html;
+    // abrir/fechar todas
+    document.getElementById('abrir-tudo').addEventListener('click', ev => {
+      const abrir = ev.target.dataset.estado !== 'aberto';
+      document.querySelectorAll('.ficha').forEach(d => d.open = abrir);
+      ev.target.dataset.estado = abrir ? 'aberto' : 'fechado';
+      ev.target.textContent = abrir ? 'fechar todas' : 'abrir todas';
+    });
+  })();
 
   // === VISÃO GERAL: MAPA, DISTRIBUIÇÃO E TABELA ===
   const perRreo = [...new Set(E.map(e => e.periodo_rreo))], perRgf = [...new Set(E.map(e => e.periodo_rgf))];
@@ -670,6 +620,13 @@ const DATA = /*__DATA__*/null;
       `<div><span class="rot">Mediana</span><span class="vlr">${val(ind, mediana(ok.map(e => e[ind.k])))}</span></div>` +
       `<div><span class="rot">Menor — ${esc(bot.nome)}</span><span class="vlr">${val(ind, bot[ind.k])}</span></div>`;
     document.getElementById('mapa-nota').textContent = ind.leitura.split('. ')[0] + '.';
+    document.getElementById('ver-ficha').onclick = ev => {
+      ev.preventDefault();
+      mostrar('#fichas-sec');
+      const f = document.getElementById('ficha' + (IND.indexOf(ind) + 1));
+      f.open = true;
+      f.scrollIntoView({block: 'center', behavior: 'smooth'});
+    };
   }
 
   // Distribuição em colmeia: proporção preservada (círculos de verdade) e pontos que
@@ -862,7 +819,7 @@ const DATA = /*__DATA__*/null;
   // === NAVEGAÇÃO ===
   const links = document.querySelectorAll('.navlink');
   const sections = document.querySelectorAll('.section');
-  function show(hash) {
+  function mostrar(hash) {
     const id = hash.replace('#', '');
     if (!document.getElementById(id)) return;
     sections.forEach(s => s.classList.toggle('active', s.id === id));
@@ -872,9 +829,9 @@ const DATA = /*__DATA__*/null;
   links.forEach(a => a.addEventListener('click', e => {
     e.preventDefault();
     history.replaceState(null, '', a.getAttribute('href'));
-    show(a.getAttribute('href'));
+    mostrar(a.getAttribute('href'));
   }));
-  if (window.location.hash) show(window.location.hash);
+  if (window.location.hash) mostrar(window.location.hash);
 </script>
 </body>
 </html>

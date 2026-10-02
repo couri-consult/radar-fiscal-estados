@@ -38,6 +38,13 @@ A seção de abertura traz um **mapa coroplético** dos 27 entes, com seletor de
 fixa a seleção e mostra onde ele está em todos os indicadores, com valor e posição. A malha vem do
 IBGE, simplificada por Douglas-Peucker para 8 KB e embutida no HTML — sem bibliotecas de mapa.
 
+### Fichas dos indicadores
+
+O painel não repete o ranking de cada indicador: a comparação entre estados fica na visão geral
+(mapa e distribuição) e o ranking publicável está em `figuras/`. A seção de fichas guarda o que
+sustenta cada número — fórmula, fonte, limite legal e a memória de cálculo com numerador e
+denominador por estado.
+
 ### Painel de folga
 
 Consolida o uso dos limites legais (100% = exatamente no teto):
