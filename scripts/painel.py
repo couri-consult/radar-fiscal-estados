@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Gera index.html (painel autocontido) a partir de dados/indicadores_2025.json.
+"""Gera o Radar Fiscal dos Estados: index.html (painel autocontido) a partir de dados/indicadores_2025.json.
 O HTML embute os dados e desenha os rankings em SVG inline (sem bibliotecas externas)."""
 import json, os, datetime, base64
 

@@ -1,4 +1,4 @@
-# Comparativo Fiscal dos Estados — 2025
+# Radar Fiscal dos Estados — 2025
 
 Ranking dos 26 estados + DF em **17 indicadores fiscais** de 2025, agrupados em cinco dimensões e
 calculados de forma idêntica a partir da API de dados abertos do **SICONFI/STN** (RREO 6º bimestre

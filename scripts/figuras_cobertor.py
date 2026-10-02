@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Gera as figuras do comparativo fiscal dos estados na identidade visual do Cobertor Curto.
+"""Gera as figuras do Radar Fiscal dos Estados na identidade visual do Cobertor Curto.
 
 Saída em figuras/: um ranking por indicador (barras horizontais) e o painel de folga
 nos limites legais (heatmap). Os dados vêm de dados/indicadores_<ano>.json.
