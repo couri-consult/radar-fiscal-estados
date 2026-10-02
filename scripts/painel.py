@@ -27,7 +27,7 @@ INDICADORES = [
      "longo": "Resultado primário do exercício sobre a Receita Corrente Líquida",
      "formula": "Resultado Primário (acima da linha) ÷ RCL (12 meses) × 100",
      "num": "resultado_primario", "den": "rcl", "sentido": "alto_bom",
-     "leitura": "A medida-síntese do esforço fiscal do ano: receitas primárias menos despesas primárias, antes dos juros. Negativo significa que o estado gastou mais do que arrecadou sem contar o custo da dívida — déficit que terá de ser coberto por endividamento ou caixa acumulado.",
+     "leitura": "A medida-síntese do esforço fiscal do ano: receitas primárias menos despesas primárias, antes dos juros. Negativo significa que o estado gastou mais do que arrecadou sem contar o custo da dívida — déficit que terá de ser coberto por endividamento ou caixa acumulado. Atenção à base: o numerador cobre receita e despesa primárias totais, enquanto a RCL é um conceito restrito, que deduz transferências a municípios, Fundeb e contribuições ao RPPS — ela equivale a entre 74% e 97% da receita primária, conforme o ente. A RCL é usada aqui por ser a régua dos demais indicadores do painel; a razão sobre a receita primária, de base única, está na memória de cálculo e altera o nível, não a ordenação (23 das 27 posições são idênticas).",
      "fonte": f"{RREO6} — Anexo 06 (Resultado Primário e Nominal) e Anexo 03 (RCL).", "ref": 0, "ref_label": "Equilíbrio primário"},
     {"k": "i8_servdivida_rcl", "grupo": "Resultado e rigidez", "titulo": "Serviço da Dívida / RCL",
      "longo": "Juros, encargos e amortização empenhados sobre a Receita Corrente Líquida",

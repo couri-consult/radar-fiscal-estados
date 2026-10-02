@@ -306,6 +306,7 @@
         <li>Todos os fluxos são <strong>acumulados de janeiro a dezembro</strong> (RREO "até o bimestre", 6º bimestre); estoques de dívida referem-se a 31/12 (RGF "até o 3º quadrimestre"). A RCL é a dos últimos 12 meses (Anexo 03).</li>
         <li>Receitas e despesas do Anexo 01 são as <strong>"exceto intra-orçamentárias"</strong>, como consta no balanço orçamentário. No Anexo 02, as funções somam os blocos exceto-intra e intra, para ficarem comparáveis à despesa primária do Anexo 06, que inclui ambos.</li>
         <li>Indicador 3 usa a despesa <strong>empenhada</strong> com GND 1 do orçamento consolidado — inclui todos os Poderes e os inativos/pensionistas pagos pelo Tesouro. Difere da Despesa Total com Pessoal do RGF (LRF), que deduz inativos com fonte própria e indenizações e é apurada por Poder; o valor do RGF (Executivo) é mostrado como referência na memória de cálculo.</li>
+        <li><strong>Resultado primário sobre a RCL:</strong> numerador e denominador têm bases distintas — o resultado primário cobre receita e despesa primárias totais, enquanto a RCL deduz transferências a municípios, Fundeb e contribuições ao RPPS, equivalendo a entre 74% (SP) e 97% (PR) da receita primária. A RCL foi mantida por ser a régua dos demais indicadores; a razão de base única (sobre a receita primária) está na memória de cálculo do indicador 2 e muda o nível, não a ordenação — 23 das 27 posições são idênticas. O regime oficial de metas (PAF, LC 156/2016) não normaliza o resultado primário: fixa-o em reais.</li>
         <li>Indicadores 1, 4 e 5 usam despesa <strong>liquidada</strong>. O CSV em <code>dados/</code> traz também as versões empenhadas.</li>
         <li>Indicador 6 usa a DCL e a RCL ajustada para limites de endividamento tal como publicadas no RGF Anexo 02 do Poder Executivo, que consolida a dívida do ente. O percentual oficial do RGF é reproduzido na memória de cálculo; diferenças em relação ao calculado aqui refletem só arredondamento.</li>
         <li><strong>Distrito Federal:</strong> parte relevante de saúde, educação e segurança do DF é paga pelo Fundo Constitucional do DF (FCDF), executado no orçamento da União e fora do RREO distrital. Isso reduz artificialmente os indicadores 2, 3 e 5 do DF na comparação com os estados.</li>
@@ -417,11 +418,15 @@ const DATA = /*__DATA__*/null;
 
   function memTable(ind) {
     const rows = E.filter(e => e[ind.k] != null).sort((a, b) => b[ind.k] - a[ind.k]);
-    const extra = ind.k === 'i3_pessoal_rcl' ? '<th class="num">DTP/RCL — RGF (LRF)</th>' : (ind.k === 'i6_dcl_rcl' ? '<th class="num">% oficial RGF</th>' : '');
+    const extra = ind.k === 'i3_pessoal_rcl' ? '<th class="num">DTP/RCL — RGF (LRF)</th>'
+                : ind.k === 'i6_dcl_rcl' ? '<th class="num">% oficial RGF</th>'
+                : ind.k === 'i7_resprim_rcl' ? '<th class="num">Sobre a receita primária</th><th class="num">RCL ÷ rec. primária</th>' : '';
     const un = ind.unidade === 'R$' ? ' (R$ bi / hab.)' : ' (R$ bilhões)';
     let s = `<table><thead><tr><th>#</th><th>UF</th><th class="num">Numerador${ind.unidade === 'R$' ? ' (R$ bi)' : ''}</th><th class="num">Denominador${ind.unidade === 'R$' ? ' (hab.)' : ''}</th><th class="num">Indicador</th>${extra}</tr></thead><tbody>`;
     rows.forEach((r, i) => {
-      const ex = ind.k === 'i3_pessoal_rcl' ? `<td class="num">${fmt1(r.dtp_pct_rcl_rgf)}</td>` : (ind.k === 'i6_dcl_rcl' ? `<td class="num">${fmt1(r.dcl_pct_rcl_rgf)}</td>` : '');
+      const ex = ind.k === 'i3_pessoal_rcl' ? `<td class="num">${fmt1(r.dtp_pct_rcl_rgf)}</td>`
+               : ind.k === 'i6_dcl_rcl' ? `<td class="num">${fmt1(r.dcl_pct_rcl_rgf)}</td>`
+               : ind.k === 'i7_resprim_rcl' ? `<td class="num">${fmt1(r.i7b_resprim_recprim)}</td><td class="num">${fmt1(r.rcl_sobre_recprim)}</td>` : '';
       s += `<tr><td>${ord(i + 1)}</td><td><strong>${r.uf}</strong> <span class="nm-sub">${esc(r.nome)}</span></td><td class="num">${ind.unidade === 'R$' ? fmtBi(r[ind.num]) : fmtBi(r[ind.num])}</td><td class="num">${ind.unidade === 'R$' ? (r[ind.den] || 0).toLocaleString('pt-BR') : fmtBi(r[ind.den])}</td><td class="num"><strong>${val(ind, r[ind.k])}</strong></td>${ex}</tr>`;
     });
     return s + '</tbody></table>';

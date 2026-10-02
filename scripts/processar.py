@@ -104,6 +104,7 @@ def process(uf, manifest):
     d["desp_primaria_emp"]  = pick(a6, "RREO6TotalDespesaPrimaria", ["DESPESAS EMPENHADAS"])
     d["resultado_primario"] = pick(a6, "ResultadoPrimarioComRPPSAcimaDaLinha", ["VALOR"]) \
                               or pick(a6, "RREO6ResultadoPrimarioEstadosMunicipios", ["VALOR"])
+    d["receita_primaria"]   = pick(a6, "RREO6TotalReceitaPrimaria", ["RECEITAS REALIZADAS (a)"])
     d["saude_liq"]     = funcao(a2, "Saúde", LIQ2)
     d["educacao_liq"]  = funcao(a2, "Educação", LIQ2)
     d["seguranca_liq"] = funcao(a2, "Segurança Pública", LIQ2)
@@ -162,6 +163,9 @@ def process(uf, manifest):
     d["i6_dcl_rcl"]         = pct(d["dcl"], d["rcl_rgf"])
     # novos — resultado e rigidez
     d["i7_resprim_rcl"]     = pct(d["resultado_primario"], d["rcl"])
+    # denominador alternativo, de base única com o numerador (ver nota metodológica no painel)
+    d["i7b_resprim_recprim"] = pct(d["resultado_primario"], d["receita_primaria"])
+    d["rcl_sobre_recprim"]  = pct(d["rcl"], d["receita_primaria"])
     d["servico_divida"]     = soma(d["juros_emp"], d["amortizacao_emp"]) \
                               if None not in (d["juros_emp"], d["amortizacao_emp"]) else None
     d["i8_servdivida_rcl"]  = pct(d["servico_divida"], d["rcl"])
