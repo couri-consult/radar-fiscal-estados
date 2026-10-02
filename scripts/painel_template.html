@@ -126,12 +126,17 @@
 
 
   /* === VISÃO GERAL: CHIPS, MAPA E DISTRIBUIÇÃO === */
-  .chips { display: flex; flex-wrap: wrap; gap: 5px; margin: 14px 0 10px 0; align-items: center; }
+  .chips { margin: 14px 0 12px 0; display: flex; flex-direction: column; gap: 5px; }
+  .chip-grupo {
+    display: grid; grid-template-columns: 158px 1fr; gap: 12px; align-items: start;
+    padding: 4px 0; border-top: 1px solid var(--line);
+  }
+  .chip-grupo:first-child { border-top: 0; }
   .chips .grp-lbl {
     font-size: 10px; text-transform: uppercase; letter-spacing: .5px; color: var(--muted);
-    margin: 0 2px 0 10px; font-weight: 700;
+    font-weight: 700; text-align: right; padding-top: 5px; line-height: 1.3;
   }
-  .chips .grp-lbl:first-child { margin-left: 0; }
+  .chip-lista { display: flex; flex-wrap: wrap; gap: 5px; }
   .chip {
     font: inherit; font-size: 11.5px; padding: 3px 9px; cursor: pointer;
     border: 1px solid var(--line); background: var(--bg); color: var(--ink); border-radius: 11px;
@@ -260,6 +265,8 @@
     nav { position: relative; height: auto; }
     main { padding: 16px; max-width: 100vw; overflow-x: hidden; }
     .kpi-grid.six { grid-template-columns: 1fr 1fr; }
+    .chip-grupo { grid-template-columns: 1fr; gap: 3px; }
+    .chips .grp-lbl { text-align: left; padding-top: 2px; }
     details.ficha > summary { flex-wrap: wrap; }
     details.ficha .fres { width: 100%; text-align: left; }
     .header-bar { flex-direction: column; align-items: flex-start; }
@@ -715,11 +722,19 @@ const DATA = /*__DATA__*/null;
   document.getElementById('limpar').addEventListener('click', () => selecionar(null));
 
   function montaChips() {
-    let g = null, html = '';
+    // uma faixa por dimensão: o rótulo fica ancorado à esquerda e não se perde na quebra de linha
+    const grupos = [];
     IND.forEach((ind, i) => {
-      if (ind.grupo !== g) { g = ind.grupo; html += `<span class="grp-lbl">${esc(g)}</span>`; }
-      html += `<button class="chip${ind.k === indMapa.k ? ' on' : ''}" data-k="${ind.k}" title="${esc(ind.titulo)} — ${esc(ind.longo)}">${i + 1}. ${esc(ind.curto || ind.titulo)}</button>`;
+      const n = i + 1;
+      if (!grupos.length || grupos[grupos.length - 1].nome !== ind.grupo)
+        grupos.push({nome: ind.grupo, itens: []});
+      grupos[grupos.length - 1].itens.push({ind, n});
     });
+    const html = grupos.map(g =>
+      `<div class="chip-grupo"><span class="grp-lbl">${esc(g.nome)}</span><div class="chip-lista">` +
+      g.itens.map(({ind, n}) =>
+        `<button class="chip${ind.k === indMapa.k ? ' on' : ''}" data-k="${ind.k}" title="${esc(ind.titulo)} — ${esc(ind.longo)}">${n}. ${esc(ind.curto || ind.titulo)}</button>`
+      ).join('') + '</div></div>').join('');
     const c = document.getElementById('chips');
     c.innerHTML = html;
     c.querySelectorAll('.chip').forEach(b => b.addEventListener('click', () => {
