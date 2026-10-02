@@ -31,6 +31,13 @@ limites legais de pessoal, dívida, garantias, operações de crédito e PPP.
 | 16 | Endividamento e limites | Despesas de PPP / RCL | RREO A13 |
 | 17 | Endividamento e limites | Regra de ouro (op. crédito ÷ despesa de capital) | RREO A09 |
 
+### Visão geral
+
+A seção de abertura traz um **mapa coroplético** dos 27 entes, com seletor de indicador, e a
+**distribuição** dos estados em cada uma das 17 dimensões. Clicar num estado (no mapa ou num ponto)
+fixa a seleção e mostra onde ele está em todos os indicadores, com valor e posição. A malha vem do
+IBGE, simplificada por Douglas-Peucker para 8 KB e embutida no HTML — sem bibliotecas de mapa.
+
 ### Painel de folga
 
 Consolida o uso dos limites legais (100% = exatamente no teto):
@@ -70,6 +77,7 @@ estados/
 └── scripts/
     ├── coletar.py             # baixa RREO A01/A02/A03/A06/A09/A13 e RGF A01-A04 dos 27 entes
     ├── processar.py           # calcula os indicadores → dados/indicadores_<ano>.{csv,json}
+    ├── malha.py               # baixa e simplifica a malha das UFs (IBGE) → dados/geo_uf.json
     ├── painel.py              # injeta os dados no template → index.html
     ├── figuras_cobertor.py    # gera figuras/*.png na identidade do Cobertor Curto
     └── painel_template.html   # HTML/CSS/JS do painel (identidade visual padrão)

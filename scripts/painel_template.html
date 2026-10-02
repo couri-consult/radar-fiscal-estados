@@ -124,6 +124,66 @@
   .heat-legend span { display: inline-flex; align-items: center; gap: 5px; }
   .heat-legend i { width: 13px; height: 13px; border-radius: 2px; display: inline-block; }
 
+
+  /* === VISÃO GERAL: CHIPS, MAPA E DISTRIBUIÇÃO === */
+  .chips { display: flex; flex-wrap: wrap; gap: 5px; margin: 14px 0 10px 0; align-items: center; }
+  .chips .grp-lbl {
+    font-size: 10px; text-transform: uppercase; letter-spacing: .5px; color: var(--muted);
+    margin: 0 2px 0 10px; font-weight: 700;
+  }
+  .chips .grp-lbl:first-child { margin-left: 0; }
+  .chip {
+    font: inherit; font-size: 11.5px; padding: 3px 9px; cursor: pointer;
+    border: 1px solid var(--line); background: var(--bg); color: var(--ink); border-radius: 11px;
+  }
+  .chip:hover { border-color: var(--accent); color: var(--accent); }
+  .chip.on { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+
+  .mapa-grid { display: grid; grid-template-columns: 1.7fr 1fr; gap: 22px; align-items: start; margin-bottom: 6px; }
+  .mapa-wrap svg { width: 100%; height: auto; }
+  .mapa-wrap { position: relative; }
+  .mapa-lado { padding-top: 6px; }
+  .ind-nome { font-size: 17px; font-weight: 700; color: var(--accent); line-height: 1.25; }
+  .ind-sub  { font-size: 12px; color: var(--muted); margin: 4px 0 14px 0; }
+  .ind-nota { font-size: 11.5px; color: var(--muted); margin-top: 14px; line-height: 1.45; }
+
+  .escala { display: flex; flex-direction: column; gap: 3px; margin-bottom: 14px; }
+  .escala .faixa { display: flex; align-items: center; gap: 8px; font-size: 11.5px; }
+  .escala .faixa i { width: 26px; height: 13px; border-radius: 2px; display: inline-block; flex: none; }
+  .escala .faixa b { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .escala .faixa span { color: var(--muted); }
+
+  .extremos { border-top: 1px solid var(--line); padding-top: 10px; }
+  .extremos div { display: flex; justify-content: space-between; gap: 10px; font-size: 12.5px; padding: 3px 0; }
+  .extremos .rot { color: var(--muted); }
+  .extremos .vlr { font-weight: 700; font-variant-numeric: tabular-nums; }
+
+  svg .uf-shape { stroke: var(--bg); stroke-width: 0.9; cursor: pointer; }
+  svg .uf-shape:hover { stroke: var(--ink); stroke-width: 1.6; }
+  svg .uf-shape.sel { stroke: var(--ink); stroke-width: 2; }
+  svg .uf-sigla { font-size: 9.5px; font-weight: 700; pointer-events: none; }
+
+  /* distribuição: uma linha por indicador */
+  .strip { display: grid; grid-template-columns: 196px 54px 1fr 54px; gap: 8px; align-items: center; padding: 1px 0; cursor: pointer; }
+  .strip .lim { font-size: 10px; color: var(--muted); font-variant-numeric: tabular-nums; text-align: right; }
+  .strip .lim:last-child { text-align: left; }
+  .strip:hover { background: var(--panel); }
+  .strip .rot { font-size: 11.5px; color: var(--ink); text-align: right; line-height: 1.2; }
+  .strip .rot small { display: block; color: var(--muted); font-size: 10px; }
+  .strip svg { display: block; }
+  svg .pt-uf { fill: var(--claro); }
+  svg .pt-uf.sel { fill: var(--escuro); }
+  svg .eixo-strip { stroke: var(--line); stroke-width: 1; }
+  svg .med-strip { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 2 2; }
+  svg .lim-strip { font-size: 9.5px; fill: var(--muted); }
+  svg .val-sel { font-size: 10.5px; font-weight: 700; fill: var(--escuro); }
+
+  @media (max-width: 800px) {
+    .mapa-grid { grid-template-columns: 1fr; }
+    .strip { grid-template-columns: 110px 40px 1fr 40px; gap: 5px; }
+    .strip .lim { font-size: 9px; }
+  }
+
   /* === CALLOUT === */
   .callout {
     background: var(--hl); border-left: 4px solid var(--accent);
@@ -235,14 +295,35 @@
       </div>
       <div class="thesis">
         <span class="tag">O que é este painel</span>
-        <p style="margin: 6px 0 0 0;">Seis razões fiscais calculadas de forma idêntica para os 26 estados e o Distrito Federal, a partir dos demonstrativos homologados no SICONFI (RREO do 6º bimestre e RGF do 3º quadrimestre). Cada indicador tem sua própria seção com ranking e rótulos de dados; a tabela abaixo consolida tudo — clique no cabeçalho para ordenar. Posição 1º = maior valor.</p>
+        <p style="margin: 6px 0 0 0;">Dezessete razões fiscais calculadas de forma idêntica para os 26 estados e o Distrito Federal, a partir dos demonstrativos homologados no SICONFI (RREO do 6º bimestre e RGF do 3º quadrimestre). Escolha um indicador para ver o mapa; clique num estado para acompanhá-lo em todas as dimensões.</p>
       </div>
 
-      <div class="kpi-grid six" id="visao-kpis"></div>
+      <!-- escolha do indicador mostrado no mapa -->
+      <div class="chips" id="chips"></div>
 
-      <h3>Tabela consolidada (%)</h3>
-      <div class="chart-tools"><span>Clique no cabeçalho para ordenar. Entre parênteses, a posição no ranking (1º = maior valor).</span></div>
-      <table id="tab-geral"></table>
+      <div class="mapa-grid">
+        <div class="mapa-wrap" id="mapa"></div>
+        <aside class="mapa-lado">
+          <div class="ind-nome" id="mapa-titulo"></div>
+          <div class="ind-sub" id="mapa-sub"></div>
+          <div class="escala" id="mapa-escala"></div>
+          <div class="extremos" id="mapa-extremos"></div>
+          <div class="ind-nota" id="mapa-nota"></div>
+        </aside>
+      </div>
+
+      <h3 id="dist-titulo">Onde cada estado se distribui</h3>
+      <div class="chart-tools">
+        <span id="dist-ajuda">Cada ponto é um estado. Passe o mouse no mapa ou clique para fixar um estado.</span>
+        <button class="btn" id="limpar" hidden>limpar seleção</button>
+      </div>
+      <div id="strips"></div>
+
+      <details id="det-tabela">
+        <summary>Tabela consolidada dos 17 indicadores</summary>
+        <div class="chart-tools"><span>Clique no cabeçalho para ordenar. Entre parênteses, a posição no ranking (1º = maior valor).</span></div>
+        <table id="tab-geral"></table>
+      </details>
       <p class="src" id="visao-src"></p>
     </section>
 
@@ -493,14 +574,173 @@ const DATA = /*__DATA__*/null;
     }));
   });
 
-  // === VISÃO GERAL: KPIs, TABELA ORDENÁVEL ===
+  // === VISÃO GERAL: MAPA, DISTRIBUIÇÃO E TABELA ===
   const perRreo = [...new Set(E.map(e => e.periodo_rreo))], perRgf = [...new Set(E.map(e => e.periodo_rgf))];
   document.getElementById('visao-meta').textContent = `RREO ${perRreo.join('/')}º bimestre · RGF ${perRgf.join('/')}º quadrimestre · ${DATA.ano}`;
-  document.getElementById('visao-kpis').innerHTML = IND.map((ind, i) => {
-    const vals = E.filter(e => e[ind.k] != null);
-    const top = vals.reduce((a, b) => b[ind.k] > a[ind.k] ? b : a), bot = vals.reduce((a, b) => b[ind.k] < a[ind.k] ? b : a);
-    return `<div class="kpi"><div class="label">${i + 1}. ${esc(ind.titulo)}</div><div class="value">${val(ind, mediana(vals.map(e => e[ind.k])))}</div><div class="delta">mediana · máx ${top.uf} ${val(ind, top[ind.k])} · mín ${bot.uf} ${val(ind, bot[ind.k])}</div></div>`;
-  }).join('');
+
+  const GEO = DATA.geo;
+  const TONS = ['#f2e6e4', '#d7b4ac', '#bd8175', '#a24f3d', '#643126'];   // escala sequencial da identidade
+  let indMapa = IND[0], ufSel = null;
+
+  // Quebras da escala por quantis, deduplicadas — indicadores concentrados (muitos zeros)
+  // produzem menos faixas distintas e caem para intervalos iguais.
+  function quebras(vals) {
+    const a = vals.slice().sort((x, y) => x - y);
+    const q = p => { const i = (a.length - 1) * p, lo = Math.floor(i), hi = Math.ceil(i);
+                     return a[lo] + (a[hi] - a[lo]) * (i - lo); };
+    let b = [q(.2), q(.4), q(.6), q(.8)].map(v => +v.toFixed(2));
+    b = [...new Set(b)].filter(v => v > a[0] && v < a[a.length - 1]);
+    if (b.length < 2) {
+      const lo = a[0], hi = a[a.length - 1], n = 4;
+      b = [...new Set(Array.from({length: n - 1}, (_, i) => +(lo + (hi - lo) * (i + 1) / n).toFixed(2)))]
+          .filter(v => v > lo && v < hi);
+    }
+    return b;
+  }
+  const faixaDe = (v, b) => { let i = 0; while (i < b.length && v >= b[i]) i++; return i; };
+  const corFaixa = (i, n) => TONS[Math.round(i * (TONS.length - 1) / Math.max(n - 1, 1))];
+  const corDe = (v, b) => v == null ? 'var(--semdado)' : corFaixa(faixaDe(v, b), b.length + 1);
+
+  // Projeção equiretangular com correção de cosseno na latitude média do país
+  const PTS = Object.values(GEO).flat(2);
+  const LO = {x0: Math.min(...PTS.map(p => p[0])), x1: Math.max(...PTS.map(p => p[0])),
+              y0: Math.min(...PTS.map(p => p[1])), y1: Math.max(...PTS.map(p => p[1]))};
+  const KX = Math.cos((LO.y0 + LO.y1) / 2 * Math.PI / 180);
+  const MW = 560, MH = 560, MPAD = 8;
+  const ESC = Math.min((MW - 2 * MPAD) / ((LO.x1 - LO.x0) * KX), (MH - 2 * MPAD) / (LO.y1 - LO.y0));
+  const px = x => (x - LO.x0) * KX * ESC + MPAD;
+  const py = y => (LO.y1 - y) * ESC + MPAD;
+  const CENTRO = {};
+  for (const [uf, aneis] of Object.entries(GEO)) {
+    const r = aneis[0];
+    CENTRO[uf] = [px(r.reduce((s, p) => s + p[0], 0) / r.length),
+                  py(r.reduce((s, p) => s + p[1], 0) / r.length) + 3];
+  }
+  // pequenos deslocamentos onde o centroide cai fora da área visível da sigla
+  const AJUSTE = {DF: [13, -9], RJ: [9, 7], ES: [11, 3], SE: [10, 3], AL: [8, -4],
+                  PB: [10, 0], RN: [8, -5], PE: [-8, 3], AP: [2, 4], SC: [2, 2]};
+
+  function desenhaMapa() {
+    const ind = indMapa;
+    const ok = E.filter(e => e[ind.k] != null);
+    const b = quebras(ok.map(e => e[ind.k]));
+    let s = `<svg viewBox="0 0 ${MW} ${MH}" role="img" aria-label="Mapa de ${esc(ind.titulo)}">`;
+    for (const [uf, aneis] of Object.entries(GEO)) {
+      const e = E.find(x => x.uf === uf), v = e ? e[ind.k] : null;
+      const d = aneis.map(r => 'M' + r.map(p => `${px(p[0]).toFixed(1)} ${py(p[1]).toFixed(1)}`).join('L') + 'Z').join('');
+      const rk = v == null ? '' : ` — ${ord(RANK[ind.k][uf])} de ${ok.length}`;
+      s += `<path class="uf-shape${uf === ufSel ? ' sel' : ''}" data-uf="${uf}" d="${d}" fill="${corDe(v, b)}">` +
+           `<title>${esc(e.nome)}: ${val(ind, v)}${rk}</title></path>`;
+    }
+    for (const [uf, c] of Object.entries(CENTRO)) {
+      const e = E.find(x => x.uf === uf), v = e ? e[ind.k] : null;
+      const claro = v != null && faixaDe(v, b) === b.length;        // texto branco só no tom mais escuro
+      const a = AJUSTE[uf] || [0, 0];
+      s += `<text class="uf-sigla" x="${(c[0] + a[0]).toFixed(1)}" y="${(c[1] + a[1]).toFixed(1)}" text-anchor="middle" fill="${claro ? '#fff' : 'var(--ink)'}">${uf}</text>`;
+    }
+    s += '</svg>';
+    document.getElementById('mapa').innerHTML = s;
+    document.querySelectorAll('.uf-shape').forEach(p => {
+      p.addEventListener('click', () => selecionar(p.dataset.uf === ufSel ? null : p.dataset.uf));
+      p.addEventListener('mouseenter', () => { if (!ufSel) realcar(p.dataset.uf); });
+      p.addEventListener('mouseleave', () => { if (!ufSel) realcar(null); });
+    });
+
+    const top = ok.reduce((a, c) => c[ind.k] > a[ind.k] ? c : a);
+    const bot = ok.reduce((a, c) => c[ind.k] < a[ind.k] ? c : a);
+    document.getElementById('mapa-titulo').textContent = ind.titulo;
+    document.getElementById('mapa-sub').textContent = ind.longo;
+    const lims = [null, ...b, null];
+    let leg = '';
+    for (let i = 0; i < lims.length - 1; i++) {
+      const de = lims[i], ate = lims[i + 1];
+      const rot = de == null ? `até ${val(ind, ate)}`
+                : ate == null ? `${val(ind, de)} ou mais`
+                : `${val(ind, de)} a ${val(ind, ate)}`;
+      const n = ok.filter(e => faixaDe(e[ind.k], b) === i).length;
+      leg += `<div class="faixa"><i style="background:${corFaixa(i, lims.length - 1)}"></i><b>${rot}</b> <span>· ${n} ${n === 1 ? 'estado' : 'estados'}</span></div>`;
+    }
+    const nd = E.filter(e => e[ind.k] == null);
+    if (nd.length) leg += `<div class="faixa"><i style="background:var(--semdado)"></i><span>sem dado · ${nd.map(e => e.uf).join(', ')}</span></div>`;
+    document.getElementById('mapa-escala').innerHTML = leg;
+    document.getElementById('mapa-extremos').innerHTML =
+      `<div><span class="rot">Maior — ${esc(top.nome)}</span><span class="vlr">${val(ind, top[ind.k])}</span></div>` +
+      `<div><span class="rot">Mediana</span><span class="vlr">${val(ind, mediana(ok.map(e => e[ind.k])))}</span></div>` +
+      `<div><span class="rot">Menor — ${esc(bot.nome)}</span><span class="vlr">${val(ind, bot[ind.k])}</span></div>`;
+    document.getElementById('mapa-nota').textContent = ind.leitura.split('. ')[0] + '.';
+  }
+
+  // Distribuição: uma linha por indicador, com os 27 estados como pontos
+  const SW = 100, SH = 24;
+  function desenhaStrips() {
+    let html = '';
+    IND.forEach((ind, i) => {
+      const ok = E.filter(e => e[ind.k] != null);
+      const vs = ok.map(e => e[ind.k]);
+      const lo = Math.min(...vs), hi = Math.max(...vs), span = (hi - lo) || 1;
+      const X = v => 3 + (v - lo) / span * (SW - 6);
+      const med = mediana(vs);
+      let s = `<svg viewBox="0 0 ${SW} ${SH}" preserveAspectRatio="none" style="width:100%;height:${SH}px" role="img" aria-label="Distribuição de ${esc(ind.titulo)}">`;
+      s += `<line class="eixo-strip" x1="3" y1="12" x2="${SW - 3}" y2="12" vector-effect="non-scaling-stroke"/>`;
+      s += `<line class="med-strip" x1="${X(med).toFixed(2)}" y1="4" x2="${X(med).toFixed(2)}" y2="20" vector-effect="non-scaling-stroke"/>`;
+      ok.forEach(e => {
+        const sel = e.uf === ufSel;
+        s += `<circle class="pt-uf${sel ? ' sel' : ''}" data-uf="${e.uf}" cx="${X(e[ind.k]).toFixed(2)}" cy="12" r="${sel ? 4 : 2.4}" vector-effect="non-scaling-stroke">` +
+             `<title>${esc(e.nome)}: ${val(ind, e[ind.k])}</title></circle>`;
+      });
+      s += '</svg>';
+      const selE = ufSel ? ok.find(e => e.uf === ufSel) : null;
+      const info = selE ? `<small>${val(ind, selE[ind.k])} · ${ord(RANK[ind.k][ufSel])} de ${ok.length}</small>`
+                 : ufSel ? '<small>sem dado</small>'
+                 : `<small>mediana ${val(ind, med)}</small>`;
+      html += `<div class="strip" data-ind="${ind.k}" title="${esc(ind.titulo)}">` +
+              `<div class="rot">${i + 1}. ${esc(ind.curto || ind.titulo)}${info}</div>` +
+              `<div class="lim">${val(ind, lo)}</div><div>${s}</div><div class="lim">${val(ind, hi)}</div></div>`;
+    });
+    document.getElementById('strips').innerHTML = html;
+    document.querySelectorAll('#strips .pt-uf').forEach(c =>
+      c.addEventListener('click', ev => { ev.stopPropagation(); selecionar(c.dataset.uf === ufSel ? null : c.dataset.uf); }));
+    document.querySelectorAll('#strips .strip').forEach(d =>
+      d.addEventListener('click', () => {
+        indMapa = IND.find(x => x.k === d.dataset.ind);
+        montaChips(); desenhaMapa();
+        document.getElementById('mapa').scrollIntoView({block: 'center', behavior: 'smooth'});
+      }));
+  }
+
+  function realcar(uf) {
+    document.querySelectorAll('#strips .pt-uf').forEach(c => {
+      const on = uf != null && c.dataset.uf === uf;
+      c.classList.toggle('sel', on);
+      c.setAttribute('r', on ? 4 : 2.4);
+    });
+  }
+  function selecionar(uf) {
+    ufSel = uf;
+    document.getElementById('limpar').hidden = !uf;
+    document.getElementById('dist-titulo').textContent = uf
+      ? `Onde ${E.find(e => e.uf === uf).nome} está em cada indicador`
+      : 'Onde cada estado se distribui';
+    document.getElementById('dist-ajuda').textContent = uf
+      ? 'Clique no estado de novo (no mapa ou num ponto) para soltar a seleção. Clique no nome de um indicador para levá-lo ao mapa.'
+      : 'Cada ponto é um estado. Passe o mouse no mapa para realçar, ou clique para fixar.';
+    desenhaMapa(); desenhaStrips();
+  }
+  document.getElementById('limpar').addEventListener('click', () => selecionar(null));
+
+  function montaChips() {
+    let g = null, html = '';
+    IND.forEach((ind, i) => {
+      if (ind.grupo !== g) { g = ind.grupo; html += `<span class="grp-lbl">${esc(g)}</span>`; }
+      html += `<button class="chip${ind.k === indMapa.k ? ' on' : ''}" data-k="${ind.k}" title="${esc(ind.titulo)} — ${esc(ind.longo)}">${i + 1}. ${esc(ind.curto || ind.titulo)}</button>`;
+    });
+    const c = document.getElementById('chips');
+    c.innerHTML = html;
+    c.querySelectorAll('.chip').forEach(b => b.addEventListener('click', () => {
+      indMapa = IND.find(x => x.k === b.dataset.k); montaChips(); desenhaMapa();
+    }));
+  }
+  montaChips(); desenhaMapa(); desenhaStrips();
 
   let sortKey = 'uf', sortDesc = false;
   function renderTab() {
