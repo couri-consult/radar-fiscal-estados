@@ -56,10 +56,12 @@ estados/
 │   ├── indicadores_2025.csv   # tabela final (; como separador) com bases em R$ e indicadores em %
 │   ├── indicadores_2025.json
 │   └── raw/                   # JSON bruto da API por UF/anexo (não versionado) + manifesto de períodos
+├── figuras/                   # PNGs na identidade visual do Cobertor Curto (para publicação)
 └── scripts/
     ├── coletar.py             # baixa RREO A01/A02/A03/A06/A09/A13 e RGF A01-A04 dos 27 entes
     ├── processar.py           # calcula os indicadores → dados/indicadores_<ano>.{csv,json}
     ├── painel.py              # injeta os dados no template → index.html
+    ├── figuras_cobertor.py    # gera figuras/*.png na identidade do Cobertor Curto
     └── painel_template.html   # HTML/CSS/JS do painel (identidade visual padrão)
 ```
 
@@ -71,6 +73,7 @@ python scripts/coletar.py      # ~15 min (270 chamadas à API); aceita códigos 
 # ANEXOS="rreo09,rgf03" python scripts/coletar.py    # recoleta só os anexos indicados
 python scripts/processar.py
 python scripts/painel.py
+python scripts/figuras_cobertor.py   # opcional: PNGs para publicação
 ```
 
 `ANO=2026 python scripts/coletar.py` etc. para outro exercício (o coletor cai para o último
