@@ -7,17 +7,20 @@
 <title>Comparativo Fiscal dos Estados — 2025</title>
 <style>
   /* === TOKENS DE IDENTIDADE VISUAL === */
+  /* Identidade visual do Cobertor Curto: terracota + grafite, escala de uma cor só.
+     A severidade é dada pela INTENSIDADE do terracota, não por verde/vermelho. */
   :root {
-    --bg:     #ffffff;
-    --panel:  #f7f7f5;
-    --ink:    #1a1a1a;
-    --muted:  #5b5b5b;
-    --accent: #003d6b;
-    --warn:   #b8460e;
-    --good:   #1f6e3d;
-    --bad:    #a4243b;
-    --line:   #d8d8d4;
-    --hl:     #fff7d6;
+    --bg:      #ffffff;   /* branco */
+    --panel:   #f7f5f4;   /* cinza quente para cards, nav e cabeçalhos de tabela */
+    --ink:     #202326;   /* grafite */
+    --muted:   #5b5f63;   /* cinza de apoio */
+    --accent:  #a24f3d;   /* terracota — cor institucional */
+    --escuro:  #643126;   /* terracota escurecido — topo da escala, acima do limite */
+    --claro:   #ca9b90;   /* terracota clareado — folga */
+    --lavado:  #f2e6e4;   /* terracota lavado — base da escala */
+    --line:    #e5e5e5;   /* grade e separadores */
+    --hl:      #f7efed;   /* fundo de callout */
+    --semdado: #e4e4e4;   /* sem dado */
   }
 
   /* === RESET E BASE === */
@@ -25,7 +28,7 @@
   html, body {
     margin: 0; padding: 0;
     background: var(--bg); color: var(--ink);
-    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-family: "Aptos", "Segoe UI Variable Text", "Segoe UI", -apple-system, Roboto, Helvetica, Arial, sans-serif;
     font-size: 14px; line-height: 1.5;
   }
 
@@ -44,14 +47,17 @@
   nav .brand { padding: 0 18px; margin-bottom: 18px; }
   nav h1 { font-size: 13px; margin: 0 0 2px 0; color: var(--accent); letter-spacing: 0.5px; }
   nav .sub { font-size: 11px; color: var(--muted); }
+  nav .sub.cc { margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--line); line-height: 1.45; }
+  nav .sub.cc a { color: var(--accent); text-decoration: none; }
+  nav .sub.cc a:hover { text-decoration: underline; }
   nav ul { list-style: none; margin: 0; padding: 0; }
   nav li a {
     display: block; padding: 8px 18px;
     color: var(--ink); text-decoration: none; font-size: 13px;
     border-left: 3px solid transparent;
   }
-  nav li a:hover { background: #ececea; }
-  nav li a.active { background: #ececea; border-left-color: var(--accent); font-weight: 600; }
+  nav li a:hover { background: #eeeae9; }
+  nav li a.active { background: #eeeae9; border-left-color: var(--accent); font-weight: 600; }
 
   /* === TIPOGRAFIA === */
   h2 {
@@ -78,9 +84,9 @@
     background: var(--panel); padding: 12px;
     border-left: 4px solid var(--accent); border-radius: 3px;
   }
-  .kpi.warn { border-left-color: var(--warn); }
-  .kpi.bad  { border-left-color: var(--bad); }
-  .kpi.good { border-left-color: var(--good); }
+  .kpi.warn { border-left-color: var(--claro); }
+  .kpi.bad  { border-left-color: var(--escuro); }
+  .kpi.good { border-left-color: var(--claro); }
   .kpi .label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
   .kpi .value { font-size: 22px; font-weight: 700; color: var(--ink); margin: 4px 0; font-variant-numeric: tabular-nums; }
   .kpi .delta { font-size: 11px; color: var(--muted); }
@@ -105,11 +111,11 @@
 
   /* === HEATMAP DE LIMITES === */
   table.heat td.cell { text-align: center; font-variant-numeric: tabular-nums; font-weight: 600; font-size: 12px; padding: 6px 4px; }
-  .heat .l0 { background: #e8f1e9; color: #1f5a31; }   /* folga confortável */
-  .heat .l1 { background: #fdf3d6; color: #6b5410; }   /* atenção */
-  .heat .l2 { background: #fde0cc; color: #6b3410; }   /* perto do limite */
-  .heat .l3 { background: #f3d2d7; color: #6b1f2c; }   /* no limite ou acima */
-  .heat .lx { background: var(--panel); color: var(--muted); font-weight: 400; }
+  .heat .l0 { background: #f2e6e4; color: var(--ink); }    /* folga confortável */
+  .heat .l1 { background: #ca9b90; color: var(--ink); }    /* atenção */
+  .heat .l2 { background: #a24f3d; color: #ffffff; }       /* perto do limite */
+  .heat .l3 { background: #643126; color: #ffffff; }       /* no limite ou acima */
+  .heat .lx { background: var(--semdado); color: var(--muted); font-weight: 400; }
   .heat td.cell small { display: block; font-size: 9.5px; font-weight: 400; opacity: .75; }
   .heat th.rot { font-size: 11px; line-height: 1.25; vertical-align: bottom; }
   .heat tbody tr:hover td { outline: 1px solid var(--accent); outline-offset: -1px; }
@@ -119,14 +125,14 @@
 
   /* === CALLOUT === */
   .callout {
-    background: var(--hl); border-left: 4px solid var(--warn);
+    background: var(--hl); border-left: 4px solid var(--accent);
     padding: 12px 16px; margin: 14px 0; border-radius: 3px;
   }
-  .callout strong { color: var(--warn); }
+  .callout strong { color: var(--escuro); }
 
   /* === THESIS BOX === */
   .thesis {
-    background: #eef4f8; border: 1px solid var(--accent);
+    background: var(--hl); border: 1px solid var(--accent);
     padding: 14px 18px; margin: 16px 0; border-radius: 4px;
   }
   .thesis .tag { font-size: 10px; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
@@ -149,7 +155,7 @@
   .legend { display: inline-flex; align-items: center; gap: 5px; margin-left: 10px; }
   .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 2px; }
   svg { max-width: 100%; height: auto; }
-  svg text { font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  svg text { font-family: "Aptos", "Segoe UI Variable Text", "Segoe UI", -apple-system, Roboto, Helvetica, Arial, sans-serif; }
   svg .rk  { font-size: 10px; fill: var(--muted); }
   svg .uf  { font-size: 12px; font-weight: 600; fill: var(--ink); }
   svg .nm  { font-size: 10px; fill: var(--muted); }
@@ -157,13 +163,13 @@
   svg .lbl.inside { fill: #fff; }
   svg .ax  { stroke: var(--line); stroke-width: 1; }
   svg .zero { stroke: var(--ink); stroke-width: 1; }
-  svg .ref { stroke: var(--bad); stroke-width: 1.2; stroke-dasharray: 4 3; }
-  svg .reflbl { font-size: 10px; fill: var(--bad); font-weight: 600; }
+  svg .ref { stroke: var(--escuro); stroke-width: 1.2; stroke-dasharray: 4 3; }
+  svg .reflbl { font-size: 10px; fill: var(--escuro); font-weight: 600; }
   svg .med { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 2 3; }
   svg .medlbl { font-size: 10px; fill: var(--muted); }
   svg .bar { fill: var(--accent); }
-  svg .bar.bad { fill: var(--bad); }
-  svg .bar.good { fill: var(--good); }
+  svg .bar.bad { fill: var(--escuro); }   /* acima da referência legal */
+  svg .bar.good { fill: var(--claro); }   /* folga: DCL negativa */
   svg .row:hover .bar { opacity: 0.8; }
 
   /* === UTILITÁRIOS === */
@@ -206,6 +212,7 @@
     <div class="brand">
       <h1>COMPARATIVO FISCAL DOS ESTADOS</h1>
       <div class="sub">SICONFI · exercício <span id="nav-ano"></span></div>
+      <div class="sub cc">Cobertor Curto<br><a href="https://substack.com/@danielcouri" target="_blank" rel="noopener">substack.com/@danielcouri</a></div>
     </div>
     <ul id="nav-list">
       <li><a href="#visao" class="navlink active">Visão geral</a></li>
@@ -250,11 +257,11 @@
         <p style="margin: 6px 0 0 0;">Cada célula mostra <strong>quanto do limite legal já foi consumido</strong> — 100% significa estar exatamente no teto. Em cada célula, o número menor é o valor do indicador; o maior, o percentual do limite usado. Ordenado pelo pior caso de cada estado.</p>
       </div>
       <div class="heat-legend">
-        <span><i class="l0" style="background:#e8f1e9"></i> até 70% do limite</span>
-        <span><i class="l1" style="background:#fdf3d6"></i> 70% a 90%</span>
-        <span><i class="l2" style="background:#fde0cc"></i> 90% a 100%</span>
-        <span><i class="l3" style="background:#f3d2d7"></i> 100% ou mais</span>
-        <span><i class="lx" style="background:#f7f7f5"></i> sem dado</span>
+        <span><i class="l0" style="background:#f2e6e4"></i> até 70% do limite</span>
+        <span><i class="l1" style="background:#ca9b90"></i> 70% a 90%</span>
+        <span><i class="l2" style="background:#a24f3d"></i> 90% a 100%</span>
+        <span><i class="l3" style="background:#643126"></i> 100% ou mais</span>
+        <span><i class="lx" style="background:#e4e4e4"></i> sem dado</span>
       </div>
       <table class="heat" id="tab-folga"></table>
       <p class="src" id="folga-src"></p>
@@ -319,9 +326,11 @@ const DATA = /*__DATA__*/null;
 <script>
   // === UTILITÁRIOS ===
   // normaliza o zero negativo (-0,04 arredondaria para "-0,0%")
-  const fmt1 = v => v == null ? 'n.d.' : (Math.abs(v) < 0.05 ? 0 : v).toLocaleString('pt-BR', {minimumFractionDigits: 1, maximumFractionDigits: 1}) + '%';
-  const fmtRS = v => v == null ? 'n.d.' : 'R$ ' + v.toLocaleString('pt-BR', {minimumFractionDigits: 0, maximumFractionDigits: 0});
-  const fmtBi = v => v == null ? 'n.d.' : (v / 1e9).toLocaleString('pt-BR', {minimumFractionDigits: 1, maximumFractionDigits: 1});
+  // padrão brasileiro, com sinal menos tipográfico (U+2212); normaliza o zero negativo
+  const menos = t => t.replace(/-/g, '−');
+  const fmt1 = v => v == null ? 'n.d.' : menos((Math.abs(v) < 0.05 ? 0 : v).toLocaleString('pt-BR', {minimumFractionDigits: 1, maximumFractionDigits: 1})) + '%';
+  const fmtRS = v => v == null ? 'n.d.' : 'R$ ' + menos(v.toLocaleString('pt-BR', {minimumFractionDigits: 0, maximumFractionDigits: 0}));
+  const fmtBi = v => v == null ? 'n.d.' : menos((v / 1e9).toLocaleString('pt-BR', {minimumFractionDigits: 1, maximumFractionDigits: 1}));
   const ord = n => n + 'º';
   const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
   const mediana = arr => { const a = arr.slice().sort((x, y) => x - y); const m = a.length >> 1; return a.length % 2 ? a[m] : (a[m - 1] + a[m]) / 2; };
@@ -329,6 +338,7 @@ const DATA = /*__DATA__*/null;
   const val = (ind, v) => ind.unidade === 'R$' ? fmtRS(v) : fmt1(v);
 
   const E = DATA.estados, IND = DATA.indicadores, LIM = DATA.limites;
+  const CREDITO = 'Elaboração: Cobertor Curto @ substack.com/@danielcouri';
   document.getElementById('nav-ano').textContent = DATA.ano;
 
   // Ranking descendente (1º = maior) por indicador; n.d. fica de fora
@@ -457,8 +467,8 @@ const DATA = /*__DATA__*/null;
         <span>Ordem:</span>
         <button class="btn on" data-desc="1">maior → menor</button>
         <button class="btn" data-desc="0">menor → maior</button>
-        ${ind.ref != null ? `<span class="legend"><i style="background:var(--bad)"></i> acima da referência</span>` : ''}
-        ${ind.k === 'i6_dcl_rcl' ? `<span class="legend"><i style="background:var(--good)"></i> DCL negativa (caixa e haveres &gt; dívida)</span>` : ''}
+        ${ind.ref != null ? `<span class="legend"><i style="background:var(--escuro)"></i> acima da referência</span>` : ''}
+        ${ind.k === 'i6_dcl_rcl' ? `<span class="legend"><i style="background:var(--claro)"></i> DCL negativa (caixa e haveres &gt; dívida)</span>` : ''}
       </div>
       <div class="chart-wrap"></div>
       <p><strong>Leitura.</strong> ${esc(ind.leitura)}</p>
@@ -466,7 +476,7 @@ const DATA = /*__DATA__*/null;
         <summary>Memória de cálculo (R$ bilhões)</summary>
         ${memTable(ind)}
       </details>
-      <p class="src">Fonte: ${esc(ind.fonte)} Elaboração própria.</p>`;
+      <p class="src">Fonte: ${esc(ind.fonte)} ${CREDITO}</p>`;
     main.insertBefore(sec, document.getElementById('folga'));
     const wrap = sec.querySelector('.chart-wrap');
     wrap.innerHTML = chart(ind, true);
@@ -518,7 +528,7 @@ const DATA = /*__DATA__*/null;
     }));
   }
   renderTab();
-  document.getElementById('visao-src').textContent = `Fonte: SICONFI/STN (RREO e RGF ${DATA.ano}). Elaboração própria. Gerado em ${DATA.gerado}.`;
+  document.getElementById('visao-src').textContent = `Fonte: SICONFI/STN (RREO e RGF ${DATA.ano}). ${CREDITO}. Gerado em ${DATA.gerado}.`;
 
   // === PAINEL DE FOLGA ===
   // Classe de cor pelo percentual do limite consumido
@@ -556,7 +566,7 @@ const DATA = /*__DATA__*/null;
   document.getElementById('folga-src').innerHTML = (estourando.length
       ? `<strong>Acima de algum limite:</strong> ${estourando.map(e => e.uf).join(', ')}. `
       : 'Nenhum ente aparece acima dos limites nominais com os dados publicados. ')
-    + `Fonte: SICONFI/STN. Elaboração própria.`;
+    + `Fonte: SICONFI/STN. ${CREDITO}.`;
   document.getElementById('tab-limites').innerHTML =
     '<thead><tr><th>Dimensão</th><th>Indicador usado</th><th>Limite</th><th>Fonte</th></tr></thead><tbody>' +
     LIM.map(L => {
@@ -571,7 +581,7 @@ const DATA = /*__DATA__*/null;
   document.getElementById('nota-periodos').innerHTML = fora.length
     ? `<strong>Períodos divergentes:</strong> ${fora.map(e => `${e.uf} (RREO ${e.periodo_rreo}º bim., RGF ${e.periodo_rgf}º quad.)`).join('; ')} — ainda não haviam homologado o último período na data de coleta; valores parciais, não comparáveis.`
     : `Todos os 27 entes tinham o RREO do 6º bimestre e o RGF do 3º quadrimestre de ${DATA.ano} homologados na data de coleta.`;
-  document.getElementById('rodape').textContent = `Painel gerado em ${DATA.gerado} a partir da API do SICONFI. Dados sujeitos a retificação pelos entes.`;
+  document.getElementById('rodape').textContent = `${CREDITO}. Painel gerado em ${DATA.gerado} a partir da API do SICONFI. Dados sujeitos a retificação pelos entes.`;
 
   // === NAVEGAÇÃO ===
   const links = document.querySelectorAll('.navlink');

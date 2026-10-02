@@ -47,6 +47,13 @@ Consolida o uso dos limites legais (100% = exatamente no teto):
 não são retornados pela API — são apurados no SIOPS/SIOPE. O indicador 5 mede *direcionamento* do
 gasto por função, não cumprimento de piso.
 
+## Identidade visual
+
+Painel e figuras seguem a identidade do **Cobertor Curto**: terracota `#A24F3D` sobre branco,
+texto grafite `#202326`, escala de uma cor só. A severidade é dada pela **intensidade** do
+terracota — lavado (folga), base (normal), escurecido `#643126` (acima do limite legal) —, sem
+paleta divergente. Tipografia Aptos quando disponível no sistema, com fallback para Segoe UI.
+
 ## Estrutura
 
 ```
